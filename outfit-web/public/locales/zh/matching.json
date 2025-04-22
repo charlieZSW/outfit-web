@@ -1,0 +1,54 @@
+{
+  "looks": {
+    "look-001": {
+      "name": "蓝白基础休闲夏日Look",
+      "description": "经典的蓝白搭配，清爽舒适，适合夏日休闲场合。"
+    },
+    "look-002": {
+      "name": "黑白简约通勤Look",
+      "description": "经典黑白配色，简约大方，适合日常通勤场合。"
+    },
+    "look-003": {
+      "name": "休闲牛仔秋季Look",
+      "description": "舒适温暖的针织衫搭配牛仔裤，适合秋季休闲场合。"
+    },
+    "look-004": {
+      "name": "约会优雅春季Look",
+      "description": "优雅的花色连衣裙搭配高跟鞋，适合春季约会场合。"
+    },
+    "look-005": {
+      "name": "正式场合冬季Look",
+      "description": "经典西装套装，正式大方，适合冬季商务场合。"
+    }
+  },
+  "combinations": {
+    "top_bottom": "上衣 + 下装",
+    "top_bottom_footwear": "上衣 + 下装 + 鞋履",
+    "dress_footwear": "连衣裙 + 鞋履",
+    "full_suit": "全套西装"
+  },
+  "matching_descriptions": {
+    "color_match": {
+      "neutral": "经典中性色搭配",
+      "contrast": "高对比色彩组合",
+      "monochrome": "单色系搭配"
+    },
+    "style_match": {
+      "casual": "休闲风格搭配",
+      "formal": "正式风格搭配",
+      "mixed": "混搭风格组合"
+    },
+    "season_specific": {
+      "spring_light": "春季轻薄层次",
+      "summer_cool": "夏季清凉搭配",
+      "autumn_layered": "秋季层次搭配",
+      "winter_warm": "冬季保暖组合"
+    }
+  },
+  "fallback_reasons": {
+    "season_mismatch": "原计划 {planned} 季节，实际适合 {actual} 季节",
+    "occasion_mismatch": "原计划 {planned} 场合，实际适合 {actual} 场合",
+    "missing_items": "缺少 {count} 件搭配必需品",
+    "partial_match": "部分匹配: 匹配度 {percent}%"
+  }
+} 

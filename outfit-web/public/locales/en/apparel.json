@@ -1,0 +1,164 @@
+{
+  "category": {
+    "tops": "Tops",
+    "bottoms": "Bottoms",
+    "dresses": "Dresses",
+    "outerwear": "Outerwear",
+    "footwear": "Footwear",
+    "bags": "Bags",
+    "accessories": "Accessories"
+  },
+  "subcategory": {
+    "tops": {
+      "tshirt": "T-shirt",
+      "shirt": "Shirt",
+      "sweater": "Sweater",
+      "hoodie": "Hoodie",
+      "vest": "Vest/Camisole"
+    },
+    "bottoms": {
+      "jeans": "Jeans",
+      "casual_pants": "Casual Pants",
+      "formal_pants": "Formal Pants",
+      "sport_pants": "Sport Pants",
+      "shorts": "Shorts",
+      "skirt": "Skirt"
+    },
+    "dresses": {
+      "short_dress": "Short Dress",
+      "midi_dress": "Midi Dress",
+      "long_dress": "Long Dress",
+      "jumpsuit": "Jumpsuit"
+    },
+    "outerwear": {
+      "blazer": "Blazer",
+      "jacket": "Jacket",
+      "trench_coat": "Trench Coat",
+      "coat": "Coat",
+      "down_jacket": "Down Jacket",
+      "vest_outerwear": "Vest"
+    },
+    "footwear": {
+      "sneakers": "Sneakers",
+      "leather_shoes": "Leather Shoes",
+      "boots": "Boots",
+      "sandals": "Sandals",
+      "flats": "Flats",
+      "heels": "Heels"
+    },
+    "bags": {
+      "handbag": "Handbag",
+      "shoulder_bag": "Shoulder Bag",
+      "backpack": "Backpack",
+      "crossbody": "Crossbody Bag",
+      "wallet": "Wallet"
+    },
+    "accessories": {
+      "scarf": "Scarf",
+      "hat": "Hat",
+      "belt": "Belt",
+      "watch": "Watch",
+      "jewelry": "Jewelry"
+    }
+  },
+  "color": {
+    "white": "White",
+    "black": "Black",
+    "gray": "Gray",
+    "beige": "Beige",
+    "blue": "Blue",
+    "red": "Red",
+    "green": "Green",
+    "yellow": "Yellow",
+    "pink": "Pink",
+    "purple": "Purple",
+    "brown": "Brown",
+    "orange": "Orange",
+    "floral": "Floral"
+  },
+  "occasion": {
+    "daily": "Daily",
+    "work": "Work",
+    "casual": "Casual",
+    "date": "Date",
+    "sport": "Sport",
+    "formal": "Formal"
+  },
+  "season": {
+    "spring": "Spring",
+    "summer": "Summer",
+    "autumn": "Autumn",
+    "winter": "Winter"
+  },
+  "style_tags": {
+    "casual": "Casual",
+    "formal": "Formal",
+    "sporty": "Sporty",
+    "elegant": "Elegant",
+    "basic": "Basic",
+    "vintage": "Vintage",
+    "trendy": "Trendy",
+    "business": "Business",
+    "streetwear": "Streetwear",
+    "minimalist": "Minimalist"
+  },
+  "style": {
+    "basic": "Basic",
+    "slim_fit": "Slim Fit",
+    "straight": "Straight",
+    "loose": "Loose",
+    "floral": "Floral",
+    "striped": "Striped"
+  },
+  "items": {
+    "basic_crew_tshirt": "Basic Crew Neck T-shirt",
+    "straight_jeans": "Straight Jeans",
+    "basic_shirt": "Basic Shirt",
+    "straight_casual_pants": "Straight Casual Pants",
+    "basic_sweater": "Basic Sweater",
+    "floral_midi_dress": "Floral Midi Dress",
+    "black_heels": "Black Heels",
+    "black_blazer": "Black Blazer",
+    "black_formal_pants": "Black Formal Pants",
+    "vneck_tshirt": "V-Neck T-shirt",
+    "loose_tshirt": "Loose Fit T-shirt",
+    "striped_tshirt": "Striped T-shirt",
+    "slim_fit_shirt": "Slim Fit Shirt",
+    "plaid_shirt": "Plaid Shirt",
+    "vneck_sweater": "V-Neck Sweater",
+    "basic_hoodie": "Basic Hoodie",
+    "slim_fit_jeans": "Slim Fit Jeans",
+    "loose_jeans": "Loose Fit Jeans",
+    "ripped_jeans": "Ripped Jeans",
+    "slim_fit_casual_pants": "Slim Fit Casual Pants",
+    "loose_casual_pants": "Loose Casual Pants",
+    "sport_pants": "Sport Pants",
+    "basic_shorts": "Basic Shorts",
+    "denim_skirt": "Denim Skirt",
+    "a_line_skirt": "A-Line Skirt",
+    "pleated_skirt": "Pleated Skirt",
+    "basic_short_dress": "Basic Short Dress",
+    "basic_long_dress": "Basic Long Dress",
+    "basic_jumpsuit": "Basic Jumpsuit",
+    "casual_jacket": "Casual Jacket",
+    "denim_jacket": "Denim Jacket",
+    "leather_jacket": "Leather Jacket",
+    "basic_trench_coat": "Basic Trench Coat",
+    "basic_coat": "Basic Coat",
+    "down_jacket": "Down Jacket",
+    "basic_vest": "Basic Vest",
+    "basic_sneakers": "Basic Sneakers",
+    "leather_shoes": "Leather Shoes",
+    "basic_boots": "Basic Boots",
+    "high_heels": "High Heels",
+    "flat_shoes": "Flat Shoes",
+    "basic_sandals": "Basic Sandals",
+    "basic_handbag": "Basic Handbag",
+    "basic_shoulder_bag": "Basic Shoulder Bag",
+    "basic_backpack": "Basic Backpack",
+    "basic_crossbody": "Basic Crossbody Bag",
+    "basic_hat": "Basic Hat",
+    "basic_scarf": "Basic Scarf",
+    "basic_belt": "Basic Belt"
+  }
+} 

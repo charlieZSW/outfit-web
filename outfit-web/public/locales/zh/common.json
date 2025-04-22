@@ -1,0 +1,54 @@
+{
+  "title": "智能穿搭助手",
+  "description": "帮您轻松解决穿搭难题",
+  "labels": {
+    "select_items": "从你的衣橱中选择物品",
+    "generate": "生成搭配",
+    "selected_items": "已选衣物",
+    "matching_results": "搭配结果",
+    "categories": "物品分类",
+    "occasions": "场合",
+    "seasons": "季节",
+    "colors": "颜色"
+  },
+  "placeholder": {
+    "no_selected_items": "请从上方选择衣物添加到这里",
+    "your_items_here": "您的选择的衣物将显示在此处",
+    "waiting_for_match": "请选择衣物、场合和季节，然后点击'生成搭配'",
+    "waiting_message": "我们将根据您的选择推荐合适的穿搭方案，让您轻松解决穿衣搭配的烦恼"
+  },
+  "messages": {
+    "minimum_items": "为获得更好的搭配效果，请至少选择2件以上的衣物，比如上衣和下装的组合",
+    "loading": "正在为您生成搭配...",
+    "analyzing": "综合分析您选择的衣物、场合和季节",
+    "no_matches": "暂无符合条件的搭配方案",
+    "sorry_message": "很抱歉，我们没有找到完全符合您当前选择的搭配方案",
+    "try_suggestions": "您可以尝试以下方法：",
+    "suggestion_more_items": "选择更多的衣物类型（如上衣+下装）",
+    "suggestion_different_combo": "尝试不同的场合或季节组合",
+    "suggestion_less_color": "减少特定颜色的限制",
+    "fallback_results": "部分近似匹配结果",
+    "fallback_description": "未找到完全匹配的搭配，以下是根据您的选择提供的近似搭配建议",
+    "image_error": "图片暂时无法显示"
+  },
+  "button": {
+    "generate": "生成搭配",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步"
+  },
+  "tags": {
+    "approx_match": "近似匹配",
+    "suggested_add": "建议添加:"
+  },
+  "languages": {
+    "zh": "中文",
+    "en": "English",
+    "language": "语言"
+  }
+} 

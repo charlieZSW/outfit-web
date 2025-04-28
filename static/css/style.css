@@ -1,0 +1,714 @@
+/* 改进后的样式 */
+:root {
+    /* Light Theme Variables */
+    --primary-bg: #f8f9fa;
+    --secondary-bg: #ffffff;
+    --textarea-bg: #fdfdfd; /* Added for textarea */
+    --border-color: #dee2e6;
+    --text-color: #212529;
+    --secondary-text-color: #495057; /* Added for h2, button text */
+    --header-bg: #343a40;
+    --header-text: #ffffff;
+    --link-color: #007bff;
+    --link-focus-shadow: rgba(0, 123, 255, 0.25); /* Added for focus */
+    --code-bg: #e9ecef;
+    --blockquote-bg: var(--primary-bg); /* Keep consistent */
+    --blockquote-border: #adb5bd;
+    --blockquote-text: #6c757d;
+    --button-bg: #f8f9fa;
+    --button-border: #ced4da;
+    --button-text: var(--secondary-text-color);
+    --button-hover-bg: #e9ecef;
+    --button-hover-border: #adb5bd;
+    --button-active-bg: #dee2e6;
+    --table-header-bg: var(--primary-bg);
+    --footer-bg: #e9ecef;
+    --footer-text: #6c757d;
+    --scrollbar-track-bg: var(--primary-bg);
+    --scrollbar-thumb-bg: #adb5bd;
+    --scrollbar-thumb-hover-bg: #868e96;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme {
+    /* Dark Theme Variables */
+    --primary-bg: #121212; /* Slightly off-black */
+    --secondary-bg: #1e1e1e; /* Common dark editor bg */
+    --textarea-bg: #2a2a2a;
+    --border-color: #444444;
+    --text-color: #cccccc;
+    --secondary-text-color: #bbbbbb; /* Increased contrast for H2 etc. Was #aaaaaa */
+    --header-bg: #1e1e1e;
+    --header-text: #cccccc;
+    --link-color: #58a6ff; /* Common blue for dark themes */
+    --link-focus-shadow: rgba(88, 166, 255, 0.3);
+    --code-bg: #282c34; /* Common dark code bg */
+    --blockquote-bg: #2a2a2a;
+    --blockquote-border: #555555;
+    --blockquote-text: #999999;
+    --button-bg: #333333;
+    --button-border: #555555;
+    --button-text: var(--text-color);
+    --button-hover-bg: #444444;
+    --button-hover-border: #666666;
+    --button-active-bg: #555555;
+    --table-header-bg: #2a2a2a;
+    --footer-bg: #1e1e1e;
+    --footer-text: #888888;
+    --scrollbar-track-bg: var(--secondary-bg);
+    --scrollbar-thumb-bg: #555555;
+    --scrollbar-thumb-hover-bg: #777777;
+    --shadow-color: rgba(255, 255, 255, 0.05); /* Light shadow for contrast */
+}
+
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 确保 footer 至少在底部 */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Add transition */
+}
+
+header {
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: 1rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    z-index: 10; /* 确保在其他内容之上 */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.editor-container {
+    display: flex;
+    flex-grow: 1; /* 占据剩余空间 */
+    margin: 1.5rem;
+    gap: 1.5rem;
+    overflow: hidden; /* 防止子元素溢出 */
+}
+
+.editor-pane,
+.preview-pane {
+    flex: 1;
+    background-color: var(--secondary-bg);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 3px 6px var(--shadow-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* 如果内容过多则显示滚动条 */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: var(--secondary-text-color); /* Use variable */
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 工具栏样式 */
+.toolbar {
+    margin-bottom: 0.75rem; /* 工具栏与下方文本框的间距 */
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    transition: border-color 0.3s ease;
+}
+
+/* NEW: Toolbar separator style */
+.toolbar-separator {
+    display: inline-block;
+    width: 1px;
+    background-color: var(--border-color);
+    margin: 0 0.5rem; /* Vertical margin 0, horizontal margin */
+    align-self: stretch; /* Make separator full height of toolbar items */
+    opacity: 0.6;
+    transition: background-color 0.3s ease;
+}
+
+.toolbar button {
+    background-color: var(--button-bg); /* Use variable */
+    border: 1px solid var(--button-border); /* Use variable */
+    padding: 0.4rem; /* Try uniform padding */
+    width: 2rem; /* Set fixed width */
+    height: 2rem; /* Set fixed height */
+    display: inline-flex; /* Use flexbox for centering */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--button-text); /* Use variable */
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Style for SVG icons within buttons */
+.toolbar button svg {
+    width: 1em; /* Adjust icon size relative to button size/font-size */
+    height: 1em;
+    vertical-align: middle; /* Ensure vertical alignment */
+    /* fill/stroke="currentColor" should be set in SVG markup */
+}
+
+/* NEW: Focus visible style for better accessibility */
+.toolbar button:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--link-focus-shadow);
+}
+
+.toolbar button:hover {
+    background-color: var(--button-hover-bg); /* Use variable */
+    border-color: var(--button-hover-border); /* Use variable */
+    /* Optionally add a slight brightness/contrast change */
+    filter: brightness(1.1);
+}
+
+.toolbar button:active {
+    background-color: var(--button-active-bg); /* Use variable */
+    transform: scale(0.95); /* Add subtle scale effect for feedback */
+}
+
+/* Push settings button to the right */
+.toolbar .settings-button {
+    margin-left: auto; /* Pushes the button to the right */
+    /* Optional: add some extra margin if needed */
+    /* margin-left: 10px; */
+}
+
+textarea#markdown-input {
+    flex-grow: 1; /* 占据面板剩余空间 */
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    border-radius: 4px;
+    resize: none; /* 禁止用户调整大小，保持布局稳定 */
+    background-color: var(--textarea-bg); /* Use variable */
+    color: var(--text-color); /* Ensure text color inherits */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+textarea#markdown-input:focus {
+    outline: none;
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 2px var(--link-focus-shadow); /* Use variable */
+}
+
+#preview-area {
+    flex-grow: 1; /* 占据面板剩余空间 */
+    border: none; /* 移除内边框，因为父元素已有边框 */
+    padding: 0; /* 移除内边距，使用 Markdown 元素的 margin */
+    background-color: transparent; /* 背景由父元素提供 */
+    overflow-y: auto; /* 内部滚动 */
+    color: var(--text-color); /* Ensure preview text color changes */
+}
+
+/* 为预览区域的 Markdown 元素添加基本样式 */
+#preview-area > *:first-child {
+    margin-top: 0;
+}
+#preview-area h1,
+#preview-area h2,
+#preview-area h3,
+#preview-area h4,
+#preview-area h5,
+#preview-area h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--text-color); /* Headers should use main text color */
+    transition: color 0.3s ease;
+}
+#preview-area p {
+    margin-bottom: 1em;
+}
+#preview-area ul,
+#preview-area ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+#preview-area blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 4px solid var(--blockquote-border); /* Use variable */
+    background-color: var(--blockquote-bg); /* Use variable */
+    color: var(--blockquote-text); /* Use variable */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+#preview-area code {
+    background-color: var(--code-bg); /* Use variable */
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 90%;
+    color: var(--text-color); /* Ensure inline code text color matches */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+#preview-area pre {
+    background-color: var(--code-bg); /* Use variable */
+    padding: 1em;
+    border: 1px solid var(--border-color); /* Add subtle border for contrast */
+    border-radius: 4px;
+    overflow-x: auto; /* 代码块水平滚动 */
+    color: #343a40; /* Explicit base color for light theme code */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Added color transition */
+}
+#preview-area pre code {
+    background-color: transparent;
+    padding: 0;
+    font-size: inherit; /* 继承 pre 的字体大小 */
+    color: inherit; /* Inherit color from pre or text-color */
+    border: none; /* Remove border from inline code style inside pre */
+}
+#preview-area a {
+    color: var(--link-color); /* Use variable */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+#preview-area a:hover {
+    text-decoration: underline;
+}
+#preview-area table {
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    width: 100%;
+}
+#preview-area th,
+#preview-area td {
+    border: 1px solid var(--border-color); /* Use variable */
+    padding: 0.5em 0.8em;
+    transition: border-color 0.3s ease;
+}
+#preview-area th {
+    background-color: var(--table-header-bg); /* Use variable */
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+#preview-area img {
+    max-width: 100%;
+    height: auto;
+    background-color: var(--secondary-bg); /* Add background for transparent images */
+    transition: background-color 0.3s ease;
+}
+
+#preview-area hr { /* NEW: Explicit HR styling */
+    border: 0;
+    border-top: 2px solid var(--border-color);
+    margin: 1.5em 0; /* Consistent vertical spacing */
+    transition: border-color 0.3s ease;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto; /* 将 footer 推到底部 */
+    padding: 1.5rem 0;
+    color: var(--footer-text); /* Use variable */
+    background-color: var(--footer-bg); /* Use variable */
+    border-top: 1px solid var(--border-color); /* Use variable */
+    width: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 可选：美化滚动条 (Webkit 浏览器) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg); /* Use variable */
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-bg); /* Use variable */
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-bg); /* Use variable */
+}
+
+/* --- CodeMirror Styling Integration --- */
+
+/* Base CodeMirror container */
+.CodeMirror {
+    border: 1px solid var(--border-color);
+    /* flex-grow: 1; /* Let CodeMirror fill the space like the original textarea */
+    /* height: auto; /* Allow CodeMirror to determine its height based on content or parent */
+    height: 100%; /* Force CodeMirror to take full height of its container */
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; /* Match original textarea */
+    font-size: 0.95rem; /* Match original textarea */
+    line-height: 1.5; /* Match original textarea */
+    border-radius: 4px; /* Match original textarea */
+    transition: border-color 0.3s ease;
+}
+
+/* Remove focus outline, as parent pane or theme might handle it */
+.CodeMirror-focused {
+    outline: none !important; /* Override default focus */
+    /* Optional: Add a subtle shadow or border change if needed */
+    /* box-shadow: 0 0 0 2px var(--link-focus-shadow); */ 
+}
+
+/* Gutters (line numbers) */
+.CodeMirror-gutters {
+    border-right: 1px solid var(--border-color);
+    background-color: var(--primary-bg); /* Slightly different background for gutters */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Line numbers text color */
+.CodeMirror-linenumber {
+    color: var(--secondary-text-color); /* Softer color for line numbers */
+    transition: color 0.3s ease;
+}
+
+/* Light theme adjustments */
+.cm-s-material-lighter.CodeMirror {
+    background-color: var(--textarea-bg); /* Use textarea background variable */
+    color: var(--text-color);
+}
+.cm-s-material-lighter .CodeMirror-gutters {
+    background-color: var(--primary-bg); /* Match body background */
+    border-right: 1px solid var(--border-color);
+}
+.cm-s-material-lighter .CodeMirror-linenumber {
+    color: #9da5b4; /* Specific lighter theme number color */
+}
+.cm-s-material-lighter .CodeMirror-cursor {
+    border-left: 1px solid var(--text-color);
+}
+/* Add more specific overrides for material-lighter if needed */
+
+
+/* Dark theme adjustments */
+body.dark-theme .cm-s-material-darker.CodeMirror {
+    background-color: var(--textarea-bg); /* Use textarea background variable */
+    color: var(--text-color);
+}
+body.dark-theme .cm-s-material-darker .CodeMirror-gutters {
+    background-color: var(--secondary-bg); /* Slightly different from editor bg in dark */
+    border-right: 1px solid var(--border-color);
+}
+body.dark-theme .cm-s-material-darker .CodeMirror-linenumber {
+    color: #676e77; /* Specific darker theme number color */
+}
+body.dark-theme .cm-s-material-darker .CodeMirror-cursor {
+    border-left: 1px solid var(--text-color);
+}
+/* Add more specific overrides for material-darker if needed */
+
+
+/* Ensure CodeMirror takes full height within the flex container */
+.editor-pane {
+    /* Ensure the parent pane allows the child to grow */
+     /* display: flex; */ /* Already set */
+     /* flex-direction: column; */ /* Already set */
+}
+
+.editor-pane .CodeMirror {
+     flex-grow: 1; /* Make CodeMirror fill the vertical space */
+     height: auto; /* Override the fixed height: 100% if flex-grow is used */
+}
+
+/* Font size classes for CodeMirror */
+.CodeMirror.cm-font-small {
+    font-size: 0.8rem; /* Adjust value as needed */
+}
+.CodeMirror.cm-font-medium {
+    font-size: 0.95rem; /* Default value */
+}
+.CodeMirror.cm-font-large {
+    font-size: 1.1rem; /* Adjust value as needed */
+}
+
+/* ===== Modal Styles ===== */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+    /* Added for smooth transition */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+/* .modal.show */
+.modal.active {
+    display: block; /* Show when active */
+    /* Added for smooth transition */
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    margin: 10% auto; /* 10% from the top and centered */
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    width: 80%; /* Could be more specific */
+    max-width: 500px; /* Maximum width */
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.modal-close {
+    color: var(--secondary-text-color);
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+    /* Style inputs/labels inside modal body later */
+    max-height: 60vh; /* Default max height */
+    /* overflow-y: auto; /* Default overflow */
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.modal-body input[type="number"],
+.modal-body input[type="text"],
+.modal-body select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--textarea-bg);
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-body input:focus,
+.modal-body select:focus {
+    outline: none;
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 2px var(--link-focus-shadow);
+}
+
+.modal-error {
+    color: #dc3545; /* Bootstrap danger color */
+    font-size: 0.875em;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.modal-footer {
+    text-align: right;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.modal-footer button {
+    background-color: var(--button-bg);
+    border: 1px solid var(--button-border);
+    color: var(--button-text);
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Primary button style (optional, for Confirm/Save) */
+.modal-footer button.primary {
+    background-color: var(--link-color);
+    border-color: var(--link-color);
+    color: var(--header-text); /* Assuming light text on blue bg */
+}
+
+.modal-footer button.primary:hover {
+    opacity: 0.9;
+}
+
+.modal-footer button:hover {
+    background-color: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
+}
+
+/* Add styles for the new editor status bar */
+.editor-status-bar {
+    margin-top: 0.75rem; /* Space above the status bar */
+    padding: 0.3rem 0.5rem; /* Padding inside the status bar */
+    font-size: 0.8rem;
+    color: var(--secondary-text-color); /* Use a secondary text color */
+    border-top: 1px solid var(--border-color); /* Separator line */
+    background-color: var(--primary-bg); /* Subtle background */
+    text-align: right; /* Align text to the right */
+    border-bottom-left-radius: 7px; /* Match pane rounding */
+    border-bottom-right-radius: 7px; /* Match pane rounding */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.editor-status-bar span {
+    font-weight: 600; /* Make the numbers bold */
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+}
+
+.editor-status-bar span {
+    margin: 0 0.25em;
+}
+
+/* NEW: Wider modal for content like documentation */
+.modal-content.wide {
+    max-width: 800px; /* Adjust as needed */
+}
+
+/* NEW: Ensure scrollable class works */
+.modal-body.scrollable {
+    overflow-y: auto;
+}
+
+/* NEW: Styles for tables inside the modal (from shortcuts.md) */
+.modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    font-size: 0.9em; /* Slightly smaller text in table */
+}
+
+.modal-body th,
+.modal-body td {
+    border: 1px solid var(--border-color);
+    padding: 6px 10px;
+    text-align: left;
+}
+
+.modal-body th {
+    background-color: var(--table-header-bg);
+    font-weight: bold;
+}
+
+.modal-body td code {
+    background-color: var(--code-bg);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+}
+
+/* NEW: Style for the help button (if needed, adjust as necessary) */
+.toolbar-button.help-button {
+    /* margin-left: 4px; /* Optional spacing */
+    /* Add specific styles if default button style is not enough */
+}
+
+.toolbar-button.settings-button {
+    margin-left: auto; /* Pushes settings button to the right */
+}
+
+/* ---- 暗色主题下的代码块高亮覆盖 ---- */
+/* 覆盖 highlight.js 亮色主题的基础样式，确保暗色主题下代码块背景和默认文字颜色正确 */
+body.dark-theme #preview-area pre {
+    background-color: var(--code-bg); /* 使用暗色主题的 code 背景变量 */
+    color: var(--text-color);      /* 使用暗色主题的默认文本颜色 */
+    border-color: var(--border-color); /* 使用暗色主题的边框颜色 */
+}
+
+/* 确保 pre > code 继承正确的背景和文字颜色 */
+body.dark-theme #preview-area pre code {
+    background-color: transparent; /* 必须透明以显示 pre 的背景 */
+    color: inherit; /* 继承 pre 的基础文字颜色 */
+}
+
+/* atom-one-dark 主题本身会处理 .hljs-* 的颜色，这里主要保证基础样式协调 */
+/* ---- 结束暗色主题覆盖 ---- */
+
+/* NEW: Style for the header theme toggle button */
+.theme-toggle-button {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    padding: 0.4rem; /* Match toolbar button padding */
+    width: 2rem; /* Match toolbar button size */
+    height: 2rem; /* Match toolbar button size */
+    background-color: var(--button-bg);
+    border: 1px solid var(--button-border);
+    color: var(--button-text);
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle-button svg {
+    width: 1.1em; /* Slightly larger icon maybe? */
+    height: 1.1em;
+    vertical-align: middle;
+}
+
+.theme-toggle-button:focus-visible {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--link-focus-shadow);
+}
+
+.theme-toggle-button:hover {
+    background-color: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
+}
+
+.theme-toggle-button:active {
+    background-color: var(--button-active-bg);
+    transform: scale(0.95); /* Add subtle scale effect */
+}
+
+/* Apply increased opacity to separator in dark theme */
+body.dark-theme .toolbar-separator {
+    opacity: 0.8; /* Increase opacity from 0.6 */
+    /* Alternatively, change color directly if needed */
+    /* background-color: #555; */
+} 

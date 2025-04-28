@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时 Markdown 编辑器</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- highlight.js themes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <!-- CodeMirror Core CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <!-- CodeMirror Themes (选择亮/暗各一个示例) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-lighter.css">
+</head>
+<body>
+    <header>
+        <h1>实时 Markdown 编辑器</h1>
+        <button id="theme-toggle" class="theme-toggle-button" title="切换主题 (Alt+T)" aria-label="切换主题" aria-pressed="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun theme-icon theme-icon-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-moon theme-icon theme-icon-moon" style="display: none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+    </header>
+
+    <main class="editor-container">
+        <section class="editor-pane">
+            <h2 id="markdown-input-heading">Markdown 输入</h2>
+            <div class="toolbar" role="toolbar" aria-labelledby="markdown-input-heading">
+                <!-- 基础格式 -->
+                <button id="toolbar-bold" title="Bold (Ctrl+B)" aria-label="Bold (Ctrl+B)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bold"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg></button>
+                <button id="toolbar-italic" title="Italic (Ctrl+I)" aria-label="Italic (Ctrl+I)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-italic"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg></button>
+                <button id="toolbar-strike" title="Strikethrough (Ctrl+Shift+S)" aria-label="Strikethrough (Ctrl+Shift+S)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-strikethrough"><path d="M16 4H9a3 3 0 0 0-2.83 4M14 12a4 4 0 0 1 0 8H6"></path><line x1="4" y1="12" x2="20" y2="12"></line></svg></button>
+                <span class="toolbar-separator"></span>
+
+                <!-- 列表 -->
+                <button id="toolbar-ul" title="Unordered List (Ctrl+Shift+L)" aria-label="Unordered List (Ctrl+Shift+L)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></button>
+                <button id="toolbar-ol" title="Ordered List (Ctrl+Shift+O)" aria-label="Ordered List (Ctrl+Shift+O)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-ordered-list"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg></button>
+                <span class="toolbar-separator"></span>
+
+                <!-- 块级格式 -->
+                <button id="toolbar-quote" title="Blockquote (Ctrl+')" aria-label="Blockquote (Ctrl+')" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg></button>
+                <button id="toolbar-heading" title="Heading (Cycle H1-H6, Ctrl+Shift+H)" aria-label="Heading (Cycle H1-H6, Ctrl+Shift+H)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-type"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg></button>
+                <button id="toolbar-hr" title="Horizontal Rule (Ctrl+Shift+-)" aria-label="Horizontal Rule (Ctrl+Shift+-)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                <button id="toolbar-code" title="Code Block / Inline (Ctrl+Shift+C)" aria-label="Code Block / Inline (Ctrl+Shift+C)" aria-pressed="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-code"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></button>
+                <span class="toolbar-separator"></span>
+
+                <!-- 插入 -->
+                <button id="toolbar-link" title="Link (Ctrl+K)" aria-label="Link (Ctrl+K)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button>
+                <button id="toolbar-table" title="Insert Table (Ctrl+Shift+T)" aria-label="Insert Table (Ctrl+Shift+T)" aria-haspopup="dialog" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-table"><path d="M3 3h18v18H3z"></path><line x1="21" y1="9" x2="3" y2="9"></line><line x1="21" y1="15" x2="3" y2="15"></line><line x1="12" y1="3" x2="12" y2="21"></line></svg></button>
+                <span class="toolbar-separator"></span>
+
+                <!-- 历史 -->
+                <button id="toolbar-undo" title="Undo (Ctrl+Z)" aria-label="Undo (Ctrl+Z)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-ccw"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                </button>
+                <button id="toolbar-redo" title="Redo (Ctrl+Y)" aria-label="Redo (Ctrl+Y)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rotate-cw"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                </button>
+                <span class="toolbar-separator"></span>
+
+                <!-- 文件 -->
+                <button id="toolbar-import-md" title="Import Markdown (.md)" aria-label="Import Markdown (.md)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></button>
+                <button id="toolbar-export-md" title="Export as Markdown (.md)" aria-label="Export as Markdown (.md)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+                <button id="toolbar-export-html" title="Export as HTML (.html)" aria-label="Export as HTML (.html)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+
+                <!-- 应用 (靠右) -->
+                <button id="settings-toggle" class="toolbar-button settings-button" title="设置" aria-label="设置" aria-haspopup="dialog" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </button>
+                <button id="toolbar-help" class="toolbar-button help-button" title="快捷键帮助 (Alt+?) " aria-label="快捷键帮助 (Alt+?)" aria-haspopup="dialog" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </button>
+            </div>
+            <!-- Hidden file input for Markdown import -->
+            <input type="file" id="import-file-input" accept=".md, .markdown, text/markdown" style="display: none;" aria-hidden="true">
+            <!-- Assign aria-label in JS after CodeMirror init -->
+            <textarea id="markdown-input" rows="20" placeholder="在此输入 Markdown..." aria-labelledby="markdown-input-heading"></textarea>
+            <!-- Status bar for counts -->
+            <div class="editor-status-bar" role="status" aria-live="polite">
+                <span id="char-count">0</span> 字符，<span id="word-count">0</span> 字数
+            </div>
+        </section>
+
+        <section class="preview-pane">
+            <h2 id="html-preview-heading">HTML 预览</h2>
+            <div id="preview-area" aria-live="polite" aria-atomic="true" aria-labelledby="html-preview-heading"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>使用 Flask, Vanilla JS, marked.js, DOMPurify 构建</p>
+    </footer>
+
+    <!-- BEGIN: Interactive Table Generator Modal -->
+    <div id="table-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="table-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" id="table-modal-close" aria-label="关闭">&times;</button>
+            <h3 id="table-modal-title">创建表格</h3>
+            <div class="modal-body">
+                <label for="table-rows">行数 (包括表头):</label>
+                <input type="number" id="table-rows" name="rows" min="1" value="3">
+
+                <label for="table-cols">列数:</label>
+                <input type="number" id="table-cols" name="cols" min="1" value="2">
+
+                <p id="table-modal-error" class="modal-error" style="display: none; color: red;" role="alert"></p> <!-- Added role="alert" -->
+            </div>
+            <div class="modal-footer">
+                <button id="table-modal-confirm">确认</button>
+                <button id="table-modal-cancel" type="button">取消</button> <!-- Use type="button" to prevent form submission if wrapped in form later -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Interactive Table Generator Modal -->
+
+    <!-- BEGIN: Editor Settings Modal -->
+    <div id="settings-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <button class="modal-close" id="settings-modal-close" aria-label="关闭">&times;</button>
+            <h3 id="settings-modal-title">编辑器设置</h3>
+            <div class="modal-body">
+                <!-- Settings controls will go here -->
+                <div class="setting-item">
+                    <label for="setting-line-numbers">显示行号:</label>
+                    <input type="checkbox" id="setting-line-numbers" name="lineNumbers">
+                </div>
+                <div class="setting-item">
+                    <label for="setting-line-wrapping">自动换行:</label>
+                    <input type="checkbox" id="setting-line-wrapping" name="lineWrapping">
+                </div>
+                <div class="setting-item">
+                    <label for="setting-font-size">编辑器字体大小:</label>
+                    <select id="setting-font-size" name="fontSize">
+                        <option value="small">小</option>
+                        <option value="medium">中</option> <!-- Default? -->
+                        <option value="large">大</option>
+                    </select>
+                </div>
+                <!-- More settings will be added here -->
+                <div class="setting-item">
+                    <label for="setting-tab-behavior">Tab 键缩进:</label>
+                    <select id="setting-tab-behavior" name="tabBehavior">
+                        <option value="tabs">制表符 (Tabs)</option>
+                        <option value="spaces-2">2 空格</option>
+                        <option value="spaces-4">4 空格</option> <!-- Default -->
+                    </select>
+                </div>
+                <p style="margin-top: 1rem; font-style: italic; color: var(--secondary-text-color);">更多设置将在后续步骤中添加。</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Maybe just a close button? Or Apply/Cancel? For now, empty -->
+                <button id="settings-modal-close-btn" type="button" aria-label="关闭设置">关闭</button> <!-- Added aria-label -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Editor Settings Modal -->
+
+    <!-- BEGIN: Shortcuts Help Modal -->
+    <div id="shortcuts-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcuts-modal-title" aria-hidden="true">
+        <div class="modal-content wide">
+            <button class="modal-close" id="shortcuts-modal-close" aria-label="关闭">&times;</button>
+            <h3 id="shortcuts-modal-title">键盘快捷键</h3>
+            <div class="modal-body scrollable" id="shortcuts-modal-content">
+                <!-- Content will be loaded here by JavaScript -->
+                <p>正在加载快捷键列表...</p>
+            </div>
+            <div class="modal-footer">
+                <button id="shortcuts-modal-close-btn" type="button" aria-label="关闭帮助">关闭</button>
+            </div>
+        </div>
+    </div>
+    <!-- END: Shortcuts Help Modal -->
+
+    <!-- 关键库引入 (根据 dependency-management.mdc) -->
+    <!-- 优先使用 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <!-- (可选) 代码高亮库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- CodeMirror Core JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <!-- CodeMirror Markdown Mode -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
+    <!-- CodeMirror Python Mode (for fenced code blocks) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+    <!-- CodeMirror Addon: Continue List (for Enter key behavior) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/continuelist.min.js"></script>
+
+    <!-- 引入我们自己的脚本 -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 

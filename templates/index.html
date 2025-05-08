@@ -3,16 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>实时 Markdown 编辑器</title>
+    <title>Outfit Web - 实时 Markdown 编辑器</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- 添加favicon -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23333'/%3E%3Ctext x='50' y='75' font-family='Arial' font-size='70' text-anchor='middle' fill='%23fff'%3EM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <!-- highlight.js themes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
     <!-- CodeMirror Core CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
     <!-- CodeMirror Themes (选择亮/暗各一个示例) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-lighter.css">
+    <!-- CodeMirror Dialog CSS (for search & replace) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css">
+    <!-- 布局优化样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-optimization.css') }}">
+    <!-- 布局功能样式 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-features.css') }}">
 </head>
 <body>
     <header>
@@ -59,14 +69,28 @@
                 </button>
                 <span class="toolbar-separator"></span>
 
+                <!-- 查找 (新增) -->
+                <button id="toolbar-find" title="查找与替换 (Ctrl+F)" aria-label="查找与替换 (Ctrl+F)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+                <span class="toolbar-separator"></span>
+
                 <!-- 文件 -->
                 <button id="toolbar-import-md" title="Import Markdown (.md)" aria-label="Import Markdown (.md)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></button>
                 <button id="toolbar-export-md" title="Export as Markdown (.md)" aria-label="Export as Markdown (.md)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
                 <button id="toolbar-export-html" title="Export as HTML (.html)" aria-label="Export as HTML (.html)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
 
+                <!-- 字数统计 (移到此处) -->
+                <div class="toolbar-status-bar" role="status" aria-live="polite">
+                    <span id="char-count">0</span> 字符，<span id="word-count">0</span> 字数
+                </div>
+
                 <!-- 应用 (靠右) -->
                 <button id="settings-toggle" class="toolbar-button settings-button" title="设置" aria-label="设置" aria-haspopup="dialog" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </button>
+                <button id="fullscreen-toggle" class="toolbar-button" title="全屏模式 (F11)" aria-label="全屏模式" aria-pressed="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                 </button>
                 <button id="toolbar-help" class="toolbar-button help-button" title="快捷键帮助 (Alt+?) " aria-label="快捷键帮助 (Alt+?)" aria-haspopup="dialog" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-help-circle"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
@@ -76,21 +100,16 @@
             <input type="file" id="import-file-input" accept=".md, .markdown, text/markdown" style="display: none;" aria-hidden="true">
             <!-- Assign aria-label in JS after CodeMirror init -->
             <textarea id="markdown-input" rows="20" placeholder="在此输入 Markdown..." aria-labelledby="markdown-input-heading"></textarea>
-            <!-- Status bar for counts -->
-            <div class="editor-status-bar" role="status" aria-live="polite">
-                <span id="char-count">0</span> 字符，<span id="word-count">0</span> 字数
-            </div>
         </section>
-
+        
+        <!-- 新增可调节分割线 -->
+        <div id="resize-handle" class="resize-handle" title="拖动调整宽度" aria-hidden="true"></div>
+        
         <section class="preview-pane">
             <h2 id="html-preview-heading">HTML 预览</h2>
             <div id="preview-area" aria-live="polite" aria-atomic="true" aria-labelledby="html-preview-heading"></div>
         </section>
     </main>
-
-    <footer>
-        <p>使用 Flask, Vanilla JS, marked.js, DOMPurify 构建</p>
-    </footer>
 
     <!-- BEGIN: Interactive Table Generator Modal -->
     <div id="table-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="table-modal-title" aria-hidden="true">
@@ -146,7 +165,6 @@
                         <option value="spaces-4">4 空格</option> <!-- Default -->
                     </select>
                 </div>
-                <p style="margin-top: 1rem; font-style: italic; color: var(--secondary-text-color);">更多设置将在后续步骤中添加。</p>
             </div>
             <div class="modal-footer">
                 <!-- Maybe just a close button? Or Apply/Cancel? For now, empty -->
@@ -178,6 +196,11 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
     <!-- (可选) 代码高亮库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- 添加 Mermaid 支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <!-- 添加 KaTeX 支持 -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
 
     <!-- CodeMirror Core JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
@@ -185,10 +208,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
     <!-- CodeMirror Python Mode (for fenced code blocks) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
-    <!-- CodeMirror Addon: Continue List (for Enter key behavior) -->
+    <!-- Additional CodeMirror Language Modes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <!-- CodeMirror Addons (Order might matter) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/continuelist.min.js"></script>
+    <!-- NEW: Addon for smart list indentation -->
+    <script src="/static/lib/indentlist.js"></script>
+    <!-- NEW: CodeMirror Search Addons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.js"></script>
 
-    <!-- 引入我们自己的脚本 -->
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <!-- 引入我们自己的脚本 (修改为 ES6 模块入口) -->
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html> 

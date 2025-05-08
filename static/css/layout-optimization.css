@@ -1,0 +1,57 @@
+/* 布局优化样式 - 解决编辑区域空间不足问题 */
+
+:root {
+    /* 覆盖原始变量，增加编辑区高度 */
+    --editor-height: 85vh; /* 从80vh增加到85vh */
+    /* --header-height: 2.2rem; */ /* NEW: Further reduce header height - Previous value */
+    --header-height: 2.0rem; /* NEW: Reduce header height even more */
+    --footer-height: 2rem; /* 从2.5rem减少到2rem */
+}
+
+/* 减小header高度和内边距 */
+header {
+    /* padding: 0.2rem 1rem !important; */ /* NEW: Further reduce vertical padding - Previous value */
+    padding: 0.15rem 1rem !important; /* NEW: Reduce vertical padding even more */
+    height: var(--header-height) !important; 
+}
+
+/* 减小顶部标题的大小 */
+header h1 {
+    font-size: 1.35rem !important; /* 从1.5rem减小到1.35rem */
+}
+
+/* 减小footer高度和内边距 */
+footer {
+    padding: 0.5rem 0 !important; /* 从0.75rem减小到0.5rem */
+    height: var(--footer-height) !important;
+}
+
+/* 调整编辑器内部元素 - 移除max-height约束，由layout-features.css控制 */
+/* .CodeMirror {
+    max-height: calc(var(--editor-height) - 5rem) !important;
+}
+
+#preview-area {
+    max-height: calc(var(--editor-height) - 2.5rem) !important;
+} */
+
+/* 减小 h2 标题的大小 */
+.editor-pane h2,
+.preview-pane h2 {
+    margin-bottom: 0.3rem !important; /* 从0.5rem减小到0.3rem */
+    font-size: 1rem !important; /* 从1.1rem减小到1rem */
+    padding-bottom: 0.2rem !important; /* 从0.3rem减小到0.2rem */
+}
+
+/* 减小工具栏高度 */
+.toolbar {
+    margin-bottom: 0.3rem !important; /* 从0.5rem减小到0.3rem */
+    padding-bottom: 0.3rem !important; /* 从0.5rem减小到0.3rem */
+}
+
+/* 减小工具栏按钮尺寸 */
+.toolbar button {
+    padding: 0.35rem !important; /* 从0.4rem减小到0.35rem */
+    width: 1.8rem !important; /* 从2rem减小到1.8rem */
+    height: 1.8rem !important; /* 从2rem减小到1.8rem */
+} 

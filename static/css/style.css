@@ -7,8 +7,8 @@
     --border-color: #dee2e6;
     --text-color: #212529;
     --secondary-text-color: #495057; /* Added for h2, button text */
-    --header-bg: #343a40;
-    --header-text: #ffffff;
+    --header-bg: var(--primary-bg); /* NEW: Match primary background for light theme */
+    --header-text: var(--secondary-text-color); /* NEW: Use secondary text color for light theme header */
     --link-color: #007bff;
     --link-focus-shadow: rgba(0, 123, 255, 0.25); /* Added for focus */
     --code-bg: #e9ecef;
@@ -22,12 +22,14 @@
     --button-hover-border: #adb5bd;
     --button-active-bg: #dee2e6;
     --table-header-bg: var(--primary-bg);
-    --footer-bg: #e9ecef;
-    --footer-text: #6c757d;
     --scrollbar-track-bg: var(--primary-bg);
     --scrollbar-thumb-bg: #adb5bd;
     --scrollbar-thumb-hover-bg: #868e96;
     --shadow-color: rgba(0, 0, 0, 0.05);
+    /* 编辑器和预览区固定高度 */
+    --editor-height: 80vh; /* 增加高度从70vh到80vh */
+    /* 头部的高度 */
+    --header-height: 2.5rem; /* 定义头部高度 (从 3rem 减小) */
 }
 
 body.dark-theme {
@@ -53,8 +55,6 @@ body.dark-theme {
     --button-hover-border: #666666;
     --button-active-bg: #555555;
     --table-header-bg: #2a2a2a;
-    --footer-bg: #1e1e1e;
-    --footer-text: #888888;
     --scrollbar-track-bg: var(--secondary-bg);
     --scrollbar-thumb-bg: #555555;
     --scrollbar-thumb-hover-bg: #777777;
@@ -71,60 +71,77 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* 确保 footer 至少在底部 */
+    min-height: 100vh; /* 确保 footer 至少在底部 - 现在这个不再必要，但保留无害 */
     transition: background-color 0.3s ease, color 0.3s ease; /* Add transition */
+    height: 100vh; /* 设置body高度为视口高度 */
+    overflow: hidden; /* 禁止body滚动，内部区域各自处理滚动 */
 }
 
 header {
     background-color: var(--header-bg);
     color: var(--header-text);
-    padding: 1rem 1.5rem;
+    padding: 0.4rem 1rem; /* NEW: Slightly increased vertical padding */
     text-align: center;
-    box-shadow: 0 2px 4px var(--shadow-color);
+    border-bottom: 1px solid var(--border-color); /* 添加底部边框 */
     z-index: 10; /* 确保在其他内容之上 */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    height: var(--header-height); /* 固定高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* 保持居中对齐 */
+    overflow: hidden; /* 防止子元素溢出 */
+}
+
+/* 调整标题大小和粗细 */
+header h1 {
+    margin: 0;
+    font-size: 1.1rem; /* 减小字体大小 */
+    font-weight: 500; /* Medium weight */
+    line-height: 1.2;
 }
 
 .editor-container {
     display: flex;
-    flex-grow: 1; /* 占据剩余空间 */
-    margin: 1.5rem;
-    gap: 1.5rem;
+    flex: 1; /* 改为flex: 1，而不是flex-grow: 1 */
+    margin: 0.75rem; /* 减小边距从1.5rem到0.75rem */
+    gap: 1rem; /* 减小间隙从1.5rem到1rem */
     overflow: hidden; /* 防止子元素溢出 */
+    /* Removed explicit height and max-height to rely on flex: 1 */
 }
 
 .editor-pane,
 .preview-pane {
     flex: 1;
     background-color: var(--secondary-bg);
-    padding: 1.5rem;
+    padding: 1rem; /* 减小内边距从1.5rem到1rem */
     border: 1px solid var(--border-color);
     box-shadow: 0 3px 6px var(--shadow-color);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* 如果内容过多则显示滚动条 */
+    overflow-y: hidden; /* 改为hidden，内部元素处理滚动 */
     transition: background-color 0.3s ease, border-color 0.3s ease;
+    /* Removed fixed height constraints to allow flex expansion */
 }
 
 h2 {
     margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
+    margin-bottom: 0.5rem; /* 减小底部margin从1rem到0.5rem */
+    font-size: 1.1rem; /* 减小字体大小从1.25rem到1.1rem */
     color: var(--secondary-text-color); /* Use variable */
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.3rem; /* 减小底部padding从0.5rem到0.3rem */
     transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 /* 工具栏样式 */
 .toolbar {
-    margin-bottom: 0.75rem; /* 工具栏与下方文本框的间距 */
-    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem; /* 减小工具栏与下方文本框的间距从0.75rem到0.5rem */
+    padding-bottom: 0.5rem; /* 减小底部padding从0.75rem到0.5rem */
     border-bottom: 1px solid var(--border-color);
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem; /* 减小间隙从0.5rem到0.4rem */
     transition: border-color 0.3s ease;
 }
 
@@ -133,7 +150,7 @@ h2 {
     display: inline-block;
     width: 1px;
     background-color: var(--border-color);
-    margin: 0 0.5rem; /* Vertical margin 0, horizontal margin */
+    margin: 0 0.4rem; /* 减小水平margin从0.5rem到0.4rem */
     align-self: stretch; /* Make separator full height of toolbar items */
     opacity: 0.6;
     transition: background-color 0.3s ease;
@@ -202,6 +219,7 @@ textarea#markdown-input {
     background-color: var(--textarea-bg); /* Use variable */
     color: var(--text-color); /* Ensure text color inherits */
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    overflow-y: auto; /* 添加垂直滚动条 */
 }
 
 textarea#markdown-input:focus {
@@ -217,6 +235,8 @@ textarea#markdown-input:focus {
     background-color: transparent; /* 背景由父元素提供 */
     overflow-y: auto; /* 内部滚动 */
     color: var(--text-color); /* Ensure preview text color changes */
+    height: 100%; /* 使用100%高度 */
+    max-height: calc(var(--editor-height) - 3rem); /* 调整减去的空间 */
 }
 
 /* 为预览区域的 Markdown 元素添加基本样式 */
@@ -317,13 +337,20 @@ textarea#markdown-input:focus {
 
 footer {
     text-align: center;
-    margin-top: auto; /* 将 footer 推到底部 */
-    padding: 1.5rem 0;
+    padding: 0.75rem 0; /* 减小上下padding从1.5rem到0.75rem */
     color: var(--footer-text); /* Use variable */
     background-color: var(--footer-bg); /* Use variable */
     border-top: 1px solid var(--border-color); /* Use variable */
     width: 100%;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    height: var(--footer-height); /* 固定高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer p {
+    margin: 0; /* 移除默认margin */
 }
 
 /* 可选：美化滚动条 (Webkit 浏览器) */
@@ -347,15 +374,15 @@ footer {
 
 /* Base CodeMirror container */
 .CodeMirror {
+    flex-grow: 1;
+    width: 100%;
+    height: auto !important; /* 覆盖默认的固定高度设置 */
+    max-height: calc(var(--editor-height) - 5.5rem); /* 调整减去的空间 */
     border: 1px solid var(--border-color);
-    /* flex-grow: 1; /* Let CodeMirror fill the space like the original textarea */
-    /* height: auto; /* Allow CodeMirror to determine its height based on content or parent */
-    height: 100%; /* Force CodeMirror to take full height of its container */
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; /* Match original textarea */
-    font-size: 0.95rem; /* Match original textarea */
-    line-height: 1.5; /* Match original textarea */
-    border-radius: 4px; /* Match original textarea */
-    transition: border-color 0.3s ease;
+    border-radius: 4px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    line-height: 1.5;
+    transition: border-color 0.2s ease;
 }
 
 /* Remove focus outline, as parent pane or theme might handle it */
@@ -577,27 +604,43 @@ body.dark-theme .cm-s-material-darker .CodeMirror-cursor {
 }
 
 /* Add styles for the new editor status bar */
-.editor-status-bar {
-    margin-top: 0.75rem; /* Space above the status bar */
-    padding: 0.3rem 0.5rem; /* Padding inside the status bar */
-    font-size: 0.8rem;
-    color: var(--secondary-text-color); /* Use a secondary text color */
-    border-top: 1px solid var(--border-color); /* Separator line */
-    background-color: var(--primary-bg); /* Subtle background */
-    text-align: right; /* Align text to the right */
-    border-bottom-left-radius: 7px; /* Match pane rounding */
-    border-bottom-right-radius: 7px; /* Match pane rounding */
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+.toolbar-status-bar {
+    background-color: transparent; /* 背景透明 */
+    color: var(--secondary-text-color);
+    font-size: 0.8rem; /* 稍微增大字体 */
+    padding: 0.2rem 0.6rem; /* 调整内边距 */
+    border-radius: 4px;
+    opacity: 1; /* 不再半透明 */
+    transition: none; /* 移除过渡 */
+    border: 1px solid var(--border-color); /* 添加细边框 */
+    margin-left: auto; /* Flex 布局，使其在工具栏中居右 */
+    align-self: center; /* 垂直居中 */
+    white-space: nowrap; /* 防止换行 */
+    /* 添加与其他按钮的间距 */
+    margin-right: 0.5rem; 
 }
 
-.editor-status-bar span {
-    font-weight: 600; /* Make the numbers bold */
-    margin-left: 0.2em;
-    margin-right: 0.2em;
+.toolbar-status-bar span {
+    font-weight: normal;
+    margin: 0 0.2em; /* 微调数字和文字间距 */
 }
 
-.editor-status-bar span {
-    margin: 0 0.25em;
+/* 可以在字数统计前添加图标（需要修改HTML） */
+/* .toolbar-status-bar::before { */
+/*    content: ''; */
+/*    display: inline-block; */
+/*    width: 1em; */
+/*    height: 1em; */
+/*    margin-right: 0.4em; */
+/*    background-image: url('path/to/icon.svg'); */ /* 替换为图标路径 */
+/*    background-size: contain; */
+/*    vertical-align: text-bottom; */
+/* } */
+
+/* 鼠标悬停时可以有轻微效果 */
+.toolbar-status-bar:hover {
+    background-color: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
 }
 
 /* NEW: Wider modal for content like documentation */
@@ -667,25 +710,24 @@ body.dark-theme #preview-area pre code {
 
 /* NEW: Style for the header theme toggle button */
 .theme-toggle-button {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    padding: 0.4rem; /* Match toolbar button padding */
-    width: 2rem; /* Match toolbar button size */
-    height: 2rem; /* Match toolbar button size */
-    background-color: var(--button-bg);
-    border: 1px solid var(--button-border);
-    color: var(--button-text);
-    border-radius: 4px;
+    background-color: transparent; /* 改为透明背景 */
+    border: 1px solid transparent; /* 添加透明边框，用于 hover/focus */
+    color: var(--header-text); /* 继承页眉文字颜色 */
+    padding: 0.3rem; /* 统一内边距 */
+    border-radius: 50%; /* 改为圆形 */
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    margin-left: 1rem; /* 保持与标题的距离 */
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    /* 保持和工具栏按钮一致的尺寸感，但可以略大一点 */
+    width: 2.2rem; /* 调整尺寸 */
+    height: 2.2rem; /* 调整尺寸 */
 }
 
 .theme-toggle-button svg {
-    width: 1.1em; /* Slightly larger icon maybe? */
+    width: 1.1em;
     height: 1.1em;
     vertical-align: middle;
 }
@@ -697,18 +739,296 @@ body.dark-theme #preview-area pre code {
 }
 
 .theme-toggle-button:hover {
-    background-color: var(--button-hover-bg);
-    border-color: var(--button-hover-border);
+    background-color: var(--button-hover-bg); /* 使用按钮悬停背景色 */
+    /* border-color: var(--button-hover-border); */ /* 移除边框变化 */
 }
 
 .theme-toggle-button:active {
-    background-color: var(--button-active-bg);
-    transform: scale(0.95); /* Add subtle scale effect */
+    background-color: var(--button-active-bg); /* 使用按钮激活背景色 */
+    transform: scale(0.95); /* 保留点击反馈 */
 }
 
-/* Apply increased opacity to separator in dark theme */
-body.dark-theme .toolbar-separator {
-    opacity: 0.8; /* Increase opacity from 0.6 */
-    /* Alternatively, change color directly if needed */
-    /* background-color: #555; */
-} 
+/* Dark theme specific adjustments for toggle button */
+body.dark-theme .theme-toggle-button {
+    color: var(--header-text);
+}
+
+body.dark-theme .theme-toggle-button:hover {
+    background-color: var(--button-hover-bg); /* 暗色主题按钮悬停背景 */
+}
+
+body.dark-theme .theme-toggle-button:active {
+    background-color: var(--button-active-bg); /* 暗色主题按钮激活背景 */
+}
+
+/* -------------------------- */
+/* CodeMirror Theming Workarounds */
+/* -------------------------- */
+
+/* 代码语言标记样式 */
+.CodeMirror .cm-code-block-marker {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #888;
+    font-weight: bold;
+}
+
+.CodeMirror .cm-code-block-lang {
+    color: #676e77;
+    font-style: italic;
+}
+
+body.dark-theme .CodeMirror .cm-code-block-marker {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+}
+
+/* Markdown 语法高亮基础样式 */
+.CodeMirror .cm-header {
+    color: #569cd6;
+    font-weight: bold;
+}
+
+.CodeMirror .cm-comment {
+    color: #6a9955;
+}
+
+.CodeMirror .cm-keyword {
+    color: #569cd6;
+}
+
+.CodeMirror .cm-def, .CodeMirror .cm-variable-2 {
+    color: #4ec9b0;
+}
+
+.CodeMirror .cm-string {
+    color: #ce9178;
+}
+
+.CodeMirror .cm-number {
+    color: #b5cea8;
+}
+
+.CodeMirror .cm-operator {
+    color: #d4d4d4;
+}
+
+.CodeMirror .cm-property {
+    color: #9cdcfe;
+}
+
+/* 标题样式增强 */
+.CodeMirror .cm-header-1 {
+    font-size: 1.4em;
+}
+
+.CodeMirror .cm-header-2 {
+    font-size: 1.3em;
+}
+
+.CodeMirror .cm-header-3 {
+    font-size: 1.2em;
+}
+
+.CodeMirror .cm-header-4 {
+    font-size: 1.1em;
+}
+
+/* 暗色主题下编辑区域的代码块高亮 */
+body.dark-theme .CodeMirror .cm-comment {
+    color: #6a9955;
+}
+
+body.dark-theme .CodeMirror .cm-keyword {
+    color: #569cd6;
+}
+
+body.dark-theme .CodeMirror .cm-def, body.dark-theme .CodeMirror .cm-variable-2 {
+    color: #4ec9b0;
+}
+
+body.dark-theme .CodeMirror .cm-string {
+    color: #ce9178;
+}
+
+body.dark-theme .CodeMirror .cm-number {
+    color: #b5cea8;
+}
+
+body.dark-theme .CodeMirror .cm-operator {
+    color: #d4d4d4;
+}
+
+body.dark-theme .CodeMirror .cm-property {
+    color: #9cdcfe;
+}
+
+/* 编辑区嵌套代码块高亮 */
+.CodeMirror .cm-m-markdown.cm-inline-code,
+.CodeMirror .cm-m-markdown.cm-fenced-code {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    padding: 0 2px;
+}
+
+body.dark-theme .CodeMirror .cm-m-markdown.cm-inline-code,
+body.dark-theme .CodeMirror .cm-m-markdown.cm-fenced-code {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ===== Mermaid图表样式 ===== */
+/* Mermaid图表样式 */
+.mermaid-diagram {
+    padding: 1em;
+    margin: 1em 0;
+    background-color: var(--code-bg);
+    border-radius: 5px;
+    text-align: center;
+    overflow-x: auto;
+}
+
+.mermaid-diagram svg {
+    max-width: 100%;
+    height: auto !important;
+}
+
+.mermaid-error {
+    color: #e74c3c;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    border-left: 4px solid #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+/* 明暗主题适配 */
+body.dark-theme .mermaid-diagram {
+    background-color: var(--code-bg);
+}
+
+/* 特定图表类型样式优化 */
+.mermaid-diagram .flowchart-link {
+    stroke: var(--text-color) !important;
+}
+
+.mermaid-diagram .marker {
+    fill: var(--text-color) !important;
+}
+
+.mermaid-diagram .edgeLabel {
+    background-color: var(--code-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* =========== CodeMirror 查找与替换对话框样式 =========== */
+/* 适配亮色和暗色主题 */
+.CodeMirror-dialog {
+    background: var(--secondary-bg); /* 使用更明确的背景色 */
+    color: var(--text-color); /* 使用明确的文本颜色 */
+    padding: 0.8rem 1rem; /* 增加内边距 */
+    border-bottom: 1px solid var(--border-color);
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    /* 使用 Flexbox 改善内部布局 */
+    display: flex;
+    align-items: center;
+    gap: 0.8rem; /* 元素间距 */
+    position: absolute; /* Keep positioning */
+    left: 0; right: 0; top: 0; /* Dialog appears at top */
+    z-index: 15;
+}
+
+/* 移除顶/底对话框的不同边框，统一由 .CodeMirror-dialog 处理 */
+/* .CodeMirror-dialog-top {
+    border-bottom: 1px solid var(--border-color);
+    top: 0;
+} */
+
+/* .CodeMirror-dialog-bottom {
+    border-top: 1px solid var(--border-color);
+    bottom: 0;
+} */
+
+/* 对话框内的标签 */
+.CodeMirror-dialog label {
+    white-space: nowrap; /* 防止标签换行 */
+}
+
+.CodeMirror-dialog input {
+    border: 1px solid var(--border-color);
+    background: var(--input-bg-color, var(--textarea-bg)); /* 使用 input 变量或回退到 textarea 变量 */
+    color: var(--text-color);
+    outline: none;
+    padding: 0.4rem 0.6rem; /* 调整内边距 */
+    margin-right: 0; /* 移除右边距，使用 flex gap */
+    border-radius: 4px; /* 统一圆角 */
+    flex-grow: 1; /* 允许输入框伸展 */
+    font-size: inherit;
+}
+
+.CodeMirror-dialog input:focus {
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 2px var(--link-focus-shadow);
+}
+
+/* 对话框内的按钮 */
+.CodeMirror-dialog button {
+    background: var(--button-bg, #e9ecef); /* 添加回退值 */
+    color: var(--button-text, var(--text-color));
+    border: 1px solid var(--button-border, var(--border-color));
+    border-radius: 4px; /* 统一圆角 */
+    padding: 0.4rem 0.8rem; /* 调整内边距 */
+    cursor: pointer;
+    margin-right: 0; /* 移除右边距 */
+    font-size: 0.85rem; /* 略微减小按钮字体 */
+    white-space: nowrap;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.CodeMirror-dialog button:hover {
+    background: var(--button-hover-bg, #dee2e6);
+    border-color: var(--button-hover-border, var(--border-color));
+}
+
+.CodeMirror-dialog button:active {
+    background: var(--button-active-bg, #ced4da);
+    transform: scale(0.98);
+}
+
+/* 提示性文本 (如: Use /re/ syntax) */
+.CodeMirror-dialog span {
+    font-size: 0.85em;
+    color: var(--secondary-text-color);
+    opacity: 0.8;
+}
+
+/* 暗色主题微调 */
+body.dark-theme .CodeMirror-dialog {
+    background: var(--secondary-bg);
+    /* color: var(--dark-text-color); /* 继承自 :root */
+    border-color: var(--dark-border-color);
+}
+
+body.dark-theme .CodeMirror-dialog input {
+    background: var(--dark-input-bg-color, var(--textarea-bg));
+    /* color: var(--dark-text-color); /* 继承 */
+    border-color: var(--dark-border-color);
+}
+
+body.dark-theme .CodeMirror-dialog button {
+    background: var(--dark-button-bg-color, #333);
+    /* color: var(--dark-button-text-color); /* 继承 */
+    border-color: var(--dark-border-color);
+}
+
+body.dark-theme .CodeMirror-dialog button:hover {
+    background: var(--dark-button-hover-bg-color, #444);
+    border-color: var(--dark-border-color);
+}
+body.dark-theme .CodeMirror-dialog button:active {
+    background: var(--dark-button-active-bg, #555);
+}
+
+body.dark-theme .CodeMirror-dialog span {
+    color: var(--secondary-text-color);
+}
+
+/* =========== 其他样式 =========== */ 

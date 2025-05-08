@@ -1,0 +1,409 @@
+/* 布局功能样式 - 包含可调节分割线和全屏模式 */
+
+/* ===== 可调节分割线样式 ===== */
+.resize-handle {
+    width: 10px;
+    cursor: col-resize;
+    background-color: transparent;
+    position: relative;
+    z-index: 10;
+    margin: 0 -5px;
+    flex: 0 0 auto; /* 防止分割线缩放 */
+    transition: background-color 0.3s ease;
+}
+
+.resize-handle::after {
+    content: "";
+    display: block;
+    width: 2px;
+    height: 100%;
+    background-color: var(--border-color);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+.resize-handle:hover::after,
+.resize-handle.dragging::after {
+    background-color: var(--link-color);
+    width: 4px;
+}
+
+body.dark-theme .resize-handle::after {
+    background-color: var(--border-color);
+}
+
+body.dark-theme .resize-handle:hover::after,
+body.dark-theme .resize-handle.dragging::after {
+    background-color: var(--link-color);
+}
+
+/* 拖动时禁止文本选择 */
+.body-no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* 确保预览区域在宽度调整后仍然正确显示和滚动 */
+.preview-pane {
+    min-width: 20%; /* 确保预览区域至少有最小宽度 */
+    box-sizing: border-box; /* 确保padding和border包含在宽度计算中 */
+    overflow: hidden !important; /* 确保overflow设置一致 */
+    display: flex; /* Use flex to position h2 and preview-area */
+    flex-direction: column; /* Stack h2 and preview-area vertically */
+}
+
+/* Preview area should take remaining space */
+#preview-area {
+    flex-grow: 1; /* Allow preview area to fill remaining space */
+    width: 100% !important; 
+    box-sizing: border-box !important;
+    overflow-y: auto !important; 
+    overflow-x: hidden !important; 
+    /* height: calc(100% - 2.5rem) !important; Remove fixed height calculation */
+    padding-bottom: 1rem !important; /* Keep bottom padding */
+    /* Add top padding to prevent content overlap with h2 */
+    padding-top: 0.5rem; 
+}
+
+/* Preview heading style adjustments if needed */
+.preview-pane h2 {
+    flex-shrink: 0; /* Prevent h2 from shrinking */
+    /* Ensure margins/padding are consistent */
+}
+
+/* 修复编辑器pane的滚动行为 */
+.editor-pane {
+    /* 确保没有额外的滚动条 */
+    overflow: hidden !important;
+    position: relative; /* 为status-bar的绝对定位提供参考 */
+    display: flex !important; /* 确保使用flexbox布局 */
+    flex-direction: column !important; /* 垂直排列子元素 */
+}
+
+/* 确保CodeMirror编辑器不会产生多余滚动条 */
+.CodeMirror {
+    /* height: 100% !important;  Let flexbox handle height */
+    flex-grow: 1 !important; /* Allow CodeMirror to fill remaining space after toolbar/h2 */
+    overflow: hidden !important; /* 仅允许内部滚动 */
+    position: relative !important; /* Ensure proper stacking context for scrollbars */
+    height: auto !important; /* 让flexbox处理高度 */
+}
+
+.CodeMirror-scroll {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    /* Ensure scroll takes full height of its container */
+    height: 100% !important; 
+    position: relative !important; /* 改回 relative */
+    /* 移除绝对定位相关的属性，因为会干扰圆角显示 */
+    /* top: 0; left: 0; right: 0; bottom: 0; */ /* 注释掉绝对定位属性 */
+}
+
+/* 在拖动状态下的特殊处理 */
+.resize-handle.dragging + .preview-pane #preview-area {
+    overflow-y: auto !important; /* 确保拖动时滚动条正确显示 */
+}
+
+/* ===== 全屏模式样式 ===== */
+body.fullscreen-mode {
+    overflow: hidden;
+}
+
+body.fullscreen-mode header,
+body.fullscreen-mode footer {
+    display: none !important;
+}
+
+body.fullscreen-mode .editor-container {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important; /* Remove padding in fullscreen */
+    border-radius: 0 !important;
+    /* 全屏模式下移除过渡，避免干扰 */
+    transition: none !important; 
+}
+
+body.fullscreen-mode .editor-pane,
+body.fullscreen-mode .preview-pane {
+    padding-top: 2.5rem !important; /* 为工具栏留出空间 */
+    border-radius: 0 !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    transition: none !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+/* 隐藏全屏模式下的标题 */
+body.fullscreen-mode .editor-pane h2,
+body.fullscreen-mode .preview-pane h2 {
+    display: none !important; /* 隐藏"Markdown 输入"和"HTML 预览"标题 */
+}
+
+body.fullscreen-mode .CodeMirror,
+body.fullscreen-mode #preview-area {
+    transition: none !important;
+}
+
+body.fullscreen-mode .toolbar {
+    padding: 0.3rem !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
+    background-color: var(--secondary-bg) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    height: auto !important; /* 确保高度自适应内容 */
+    transition: transform 0.3s ease !important; /* 添加过渡效果 */
+    transform: translateY(0) !important; /* 默认完全显示 */
+}
+
+/* 工具栏处于收起状态 */
+body.fullscreen-mode .toolbar.toolbar-collapsed {
+    transform: translateY(-100%) !important; /* 向上收起 */
+}
+
+/* 工具栏切换按钮 */
+.toolbar-toggle {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    top: 5px;
+    right: 50px;
+    z-index: 101;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+    justify-content: center;
+    align-items: center;
+}
+
+.toolbar-toggle:hover {
+    opacity: 1;
+}
+
+.toolbar-toggle svg {
+    width: 20px;
+    height: 20px;
+    color: var(--text-color);
+    transition: transform 0.3s ease;
+}
+
+/* 切换按钮在工具栏收起时的旋转效果 */
+.toolbar-collapsed + .toolbar-toggle svg {
+    transform: rotate(180deg);
+}
+
+/* 全屏模式下显示工具栏切换按钮 */
+body.fullscreen-mode .toolbar-toggle {
+    display: flex;
+}
+
+/* 为编辑区和预览区域留出工具栏收起后的空间调整 */
+body.fullscreen-mode .editor-pane.toolbar-collapsed,
+body.fullscreen-mode .preview-pane.toolbar-collapsed {
+    padding-top: 0.5rem !important; /* 工具栏收起时减少顶部内边距 */
+}
+
+/* 确保CodeMirror在全屏模式下有正确的高度 */
+body.fullscreen-mode .CodeMirror {
+    height: 100% !important; /* 使用百分比而不是固定计算值 */
+    max-height: 100% !important;
+    border: none !important;
+}
+
+body.fullscreen-mode #preview-area {
+    height: 100% !important; /* 使用百分比高度 */
+    max-height: 100% !important;
+    padding-top: 0.5rem !important; /* 恢复合理的顶部内边距 */
+}
+
+/* ===== 页眉页脚收缩功能样式 ===== */
+
+/* 页眉页脚定位样式 */
+header, footer {
+    position: relative; /* 用于定位收缩按钮 */
+    z-index: 100; /* 确保在其他元素之上 */
+    overflow: hidden; /* 确保收缩时内容不溢出 */
+    /* 过渡动画已在 headerFooterCollapse.js 中通过<style>标签添加 */
+}
+
+/* 修改页眉页脚收缩方式，使用position absolute而不是transform，彻底移出文档流 */
+.header-collapsed {
+    position: absolute !important;
+    top: -100% !important;
+    opacity: 0.1 !important;
+    /* 保留原有transform以实现悬停效果 */
+}
+
+.footer-collapsed {
+    position: absolute !important;
+    bottom: -100% !important;
+    opacity: 0.1 !important;
+    /* 保留原有transform以实现悬停效果 */
+}
+
+/* 鼠标悬停时的提示区域显示修改 */
+.header-collapsed:hover {
+    top: 0 !important;
+    opacity: 0.8 !important;
+}
+
+.footer-collapsed:hover {
+    bottom: 0 !important;
+    opacity: 0.8 !important;
+}
+
+/* 为 .editor-container 添加过渡效果 */
+.editor-container {
+    /* 确保从 layout-optimization.css 继承的 !important 不会阻止这里的 transition */
+    transition: height 0.3s ease, max-height 0.3s ease, margin 0.3s ease, padding 0.3s ease, border-radius 0.3s ease;
+    /* 保留一点边距 */
+    margin: 0.25rem !important;
+}
+
+/* 为编辑器和预览区域添加过渡效果 */
+.editor-pane,
+.preview-pane {
+    transition: height 0.3s ease, max-height 0.3s ease, border-radius 0.3s ease, margin-bottom 0.3s ease;
+    /* 保留圆角 */
+    border-radius: 8px !important; 
+}
+
+/* 为 CodeMirror 和 preview-area 添加过渡效果 */
+.CodeMirror,
+#preview-area {
+    /* 移除这里的height过渡，因为其高度依赖父级max-height，避免冲突 */
+    transition: max-height 0.3s ease;
+}
+
+/* 当页眉隐藏时，调整主内容区域 */
+body:has(header.header-collapsed) .editor-container {
+    margin-top: 0.25rem !important; /* 保留一点顶部边距 */
+    padding-top: 0 !important;
+    /* 基础高度加上页眉高度 */
+    height: calc(var(--editor-height) + var(--header-height) + 0.5rem) !important; /* 调整计算以适应边距 */
+    max-height: calc(100vh - var(--footer-height) - 0.5rem) !important; /* 调整计算 */
+}
+
+/* 当页脚隐藏时，调整主内容区域 */
+body:has(footer.footer-collapsed) .editor-container {
+    margin-bottom: 0.25rem !important; /* 保留一点底部边距 */
+    padding-bottom: 0 !important;
+}
+
+/* 当页眉和页脚都隐藏时，进一步调整主内容区域 */
+body:has(header.header-collapsed):has(footer.footer-collapsed) .editor-container {
+    /* 基础高度加上两者高度 */
+    height: calc(var(--editor-height) + var(--header-height) + var(--footer-height) + 0.5rem) !important; /* 调整计算 */
+    max-height: calc(100vh - 0.5rem) !important; /* 调整计算 */
+}
+
+/* 调整内部 Pane 高度 */
+body:has(header.header-collapsed) .editor-pane,
+body:has(header.header-collapsed) .preview-pane {
+    height: calc(var(--editor-height) + var(--header-height)) !important;
+    max-height: calc(var(--editor-height) + var(--header-height)) !important;
+}
+
+body:has(footer.footer-collapsed) .editor-pane,
+body:has(footer.footer-collapsed) .preview-pane {
+    height: calc(var(--editor-height) + var(--footer-height)) !important;
+    max-height: calc(var(--editor-height) + var(--footer-height)) !important;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+body:has(header.header-collapsed):has(footer.footer-collapsed) .editor-pane,
+body:has(header.header-collapsed):has(footer.footer-collapsed) .preview-pane {
+    height: calc(var(--editor-height) + var(--header-height) + var(--footer-height)) !important;
+    max-height: calc(var(--editor-height) + var(--header-height) + var(--footer-height)) !important;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+/* 调整页面的整体内边距以实现全屏效果 - 修改为保留小边距 */
+body:has(header.header-collapsed) {
+    padding-top: 0.25rem !important;
+}
+
+body:has(footer.footer-collapsed) {
+    padding-bottom: 0.25rem !important;
+}
+
+body:has(header.header-collapsed):has(footer.footer-collapsed) {
+    padding: 0.25rem !important;
+}
+
+/* 调整 CodeMirror 和 Preview Area 的 Max Height */
+/* 这些计算需要确保 pane 内部元素有足够的空间，且不会导致 pane 本身出现滚动条 */
+body:has(header.header-collapsed) .CodeMirror {
+    max-height: calc(var(--editor-height) + var(--header-height) - 3rem) !important; 
+}
+body:has(header.header-collapsed) #preview-area {
+    max-height: calc(var(--editor-height) + var(--header-height) - 2.5rem) !important; 
+}
+
+body:has(footer.footer-collapsed) .CodeMirror {
+    max-height: calc(var(--editor-height) + var(--footer-height) - 3rem) !important;
+}
+body:has(footer.footer-collapsed) #preview-area {
+    max-height: calc(var(--editor-height) + var(--footer-height) - 2.5rem) !important;
+    /* height: calc(100% - 2.5rem) !important; */ /* 移除此行，依赖 flex-grow */
+}
+
+body:has(header.header-collapsed):has(footer.footer-collapsed) .CodeMirror {
+    max-height: calc(var(--editor-height) + var(--header-height) + var(--footer-height) - 3rem) !important;
+}
+body:has(header.header-collapsed):has(footer.footer-collapsed) #preview-area {
+    max-height: calc(var(--editor-height) + var(--header-height) + var(--footer-height) - 2.5rem) !important;
+    /* height: calc(100% - 2.5rem) !important; */ /* 移除此行，依赖 flex-grow */
+}
+
+/* 支持CSS has选择器的浏览器的兼容性样式 (保持不变，作为降级方案) */
+@supports not (selector(:has(*))) {
+    /* 提供不支持:has选择器的浏览器的备用样式 */
+    header.header-collapsed + .editor-container {
+        margin-top: 0.25rem !important;
+        padding-top: 0 !important;
+        /* border-top-left-radius: 0 !important; */
+        /* border-top-right-radius: 0 !important; */
+    }
+    
+    .editor-container + footer.footer-collapsed {
+        margin-bottom: 0.25rem !important;
+        padding-bottom: 0 !important;
+        /* border-bottom-left-radius: 0 !important; */
+        /* border-bottom-right-radius: 0 !important; */
+    }
+}
+
+/* 修复全屏模式与页脚收缩交互问题 */
+/* 添加更高优先级规则，确保无论是否处于全屏模式，边距都能正确应用 */
+body:has(footer.footer-collapsed):not(.fullscreen-mode) .editor-pane,
+body:has(footer.footer-collapsed):not(.fullscreen-mode) .preview-pane {
+    margin-bottom: 0.5rem !important; /* 确保更高优先级应用 */
+}
+
+/* 从全屏模式退出后，确保页脚收缩状态下的边距能正确应用 */
+body:has(footer.footer-collapsed) .editor-pane::after,
+body:has(footer.footer-collapsed) .preview-pane::after {
+    content: "";
+    display: block;
+    height: 0.5rem;
+    position: relative;
+    bottom: 0;
+    pointer-events: none; /* 防止干扰用户交互 */
+} 

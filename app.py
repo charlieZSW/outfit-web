@@ -1,5 +1,6 @@
 import logging
 from flask import Flask, render_template
+from livereload import Server
 
 app = Flask(__name__)
 
@@ -46,5 +47,11 @@ def internal_server_error(error):
 
 # --- 运行 --- 
 if __name__ == '__main__':
-    # debug=True 方便开发调试，生产环境应关闭
+    # 恢复使用 Flask 内置的 debug 模式运行
     app.run(debug=True) 
+    # # 使用 livereload Server 替代 app.run (注释掉或删除)
+    # # server = Server(app.wsgi_app)
+    # # server.watch('**/*.py')
+    # # server.watch('templates/')
+    # # server.watch('static/')
+    # # server.serve(port=5000, open_url_delay=1)

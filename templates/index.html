@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Markdown Editor</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="/static/css/style.css">
     <!-- Add favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23333'/%3E%3Ctext x='50' y='75' font-family='Arial' font-size='70' text-anchor='middle' fill='%23fff'%3EM%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <!-- highlight.js themes -->
@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-lighter.css">
     <!-- Layout optimization styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-optimization.css') }}">
+    <link rel="stylesheet" href="/static/css/layout-optimization.css">
     <!-- Layout functionality styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout-features.css') }}">
+    <link rel="stylesheet" href="/static/css/layout-features.css">
     <!-- Search panel styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/search-panel.css') }}">
+    <link rel="stylesheet" href="/static/css/search-panel.css">
 </head>
 <body>
     <header>
@@ -309,7 +309,7 @@ fill="currentColor" stroke="none">
     <!-- Add Mermaid support -->
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <!-- Add KaTeX support -->
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUbGuBFPo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
 
     <!-- CodeMirror Core JS -->
@@ -331,6 +331,6 @@ fill="currentColor" stroke="none">
     <script src="/static/lib/indentlist.js"></script>
 
     <!-- Import our own script (modified to ES6 module entry) -->
-    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script type="module" src="/static/js/main.js"></script>
 </body>
 </html> 

@@ -31,8 +31,7 @@ export async function loadAndShowShortcuts() {
         return;
     }
 
-    isLoading = true;
-    shortcutsModalContent.innerHTML = '<p>正在加载快捷键列表...</p>';
+        isLoading = true;    shortcutsModalContent.innerHTML = '<p>Loading keyboard shortcuts...</p>';
     // Ensure modal is visible while loading (might already be shown by button click)
     if (!shortcutsModal.classList.contains('active')) {
          showModal(shortcutsModal);
@@ -59,7 +58,7 @@ export async function loadAndShowShortcuts() {
 
     } catch (error) {
         console.error('Error loading or rendering shortcuts help:', error);
-        shortcutsModalContent.innerHTML = '<p style="color: red;">无法加载快捷键帮助文档。请稍后再试。</p>';
+        shortcutsModalContent.innerHTML = '<p style="color: red;">Unable to load keyboard shortcuts documentation. Please try again later.</p>';
         contentLoaded = false; // Allow retrying if loading failed
     } finally {
         isLoading = false;

@@ -1,47 +1,47 @@
-# 键盘快捷键
+# Keyboard Shortcuts
 
-本文档列出了编辑器中可用的键盘快捷键。
+This document lists keyboard shortcuts available in the editor.
 
-## 格式化
+## Formatting
 
-| 功能         | Windows/Linux   | macOS           | 描述                     |
-| :----------- | :-------------- | :-------------- | :----------------------- |
-| **加粗**     | `Ctrl` + `B`    | `Cmd` + `B`     | 应用或移除粗体格式       |
-| *斜体*     | `Ctrl` + `I`    | `Cmd` + `I`     | 应用或移除斜体格式       |
-| ~~删除线~~ | `Ctrl`+`Shift`+`S` | `Cmd`+`Shift`+`S` | 应用或移除删除线格式     |
-| `代码`       | `Ctrl`+`Shift`+`C` | `Cmd`+`Shift`+`C` | 应用或移除行内代码/代码块 |
-| > 引用       | `Ctrl` + `'`     | `Cmd` + `'`     | 切换块引用格式           |
-| 链接         | `Ctrl` + `K`    | `Cmd` + `K`     | 插入链接模板             |
-| 标题         | `Ctrl`+`Shift`+`H` | `Cmd`+`Shift`+`H` | 循环切换 H1-H6 / 移除标题 |
-| 无序列表   | `Ctrl`+`Shift`+`L` | `Cmd`+`Shift`+`L` | 切换无序列表项         |
-| 有序列表   | `Ctrl`+`Shift`+`O` | `Cmd`+`Shift`+`O` | 切换有序列表项         |
-| 水平线     | `Ctrl`+`Shift`+`-` | `Cmd`+`Shift`+`-` | 插入水平分割线         |
-| 表格         | `Ctrl`+`Shift`+`T` | `Cmd`+`Shift`+`T` | 打开插入表格对话框     |
+| Function      | Windows/Linux   | macOS           | Description                  |
+| :------------ | :-------------- | :-------------- | :--------------------------- |
+| **Bold**      | `Ctrl` + `B`    | `Cmd` + `B`     | Apply or remove bold format  |
+| *Italic*      | `Ctrl` + `I`    | `Cmd` + `I`     | Apply or remove italic format|
+| ~~Strikethrough~~ | `Ctrl`+`Shift`+`S` | `Cmd`+`Shift`+`S` | Apply or remove strikethrough format |
+| `Code`        | `Ctrl`+`Shift`+`C` | `Cmd`+`Shift`+`C` | Apply or remove inline code/code block |
+| > Blockquote  | `Ctrl` + `'`     | `Cmd` + `'`     | Toggle blockquote format     |
+| Link          | `Ctrl` + `K`    | `Cmd` + `K`     | Insert link template         |
+| Heading       | `Ctrl`+`Shift`+`H` | `Cmd`+`Shift`+`H` | Cycle through H1-H6 / remove heading |
+| Unordered List| `Ctrl`+`Shift`+`L` | `Cmd`+`Shift`+`L` | Toggle unordered list item |
+| Ordered List  | `Ctrl`+`Shift`+`O` | `Cmd`+`Shift`+`O` | Toggle ordered list item   |
+| Horizontal Line| `Ctrl`+`Shift`+`-` | `Cmd`+`Shift`+`-` | Insert horizontal divider |
+| Table         | `Ctrl`+`Shift`+`T` | `Cmd`+`Shift`+`T` | Open insert table dialog   |
 
-## 编辑与导航
+## Editing and Navigation
 
-| 功能   | Windows/Linux   | macOS               | 描述           |
-| :----- | :-------------- | :------------------ | :------------- |
-| 撤销   | `Ctrl` + `Z`    | `Cmd` + `Z`         | 撤销上一步操作 |
-| 重做   | `Ctrl` + `Y`    | `Cmd` + `Shift` + `Z` | 重做上一步操作 |
-| (缩进) | `Tab`           | `Tab`               | 缩进 (根据设置) |
-| (反缩进)| `Shift` + `Tab` | `Shift` + `Tab`     | 反缩进         |
+| Function | Windows/Linux   | macOS               | Description      |
+| :------- | :-------------- | :------------------ | :--------------- |
+| Undo     | `Ctrl` + `Z`    | `Cmd` + `Z`         | Undo last action |
+| Redo     | `Ctrl` + `Y`    | `Cmd` + `Shift` + `Z` | Redo last action |
+| (Indent) | `Tab`           | `Tab`               | Indent (per settings) |
+| (Outdent)| `Shift` + `Tab` | `Shift` + `Tab`     | Outdent          |
 
-## 文件操作
+## File Operations
 
-| 功能         | Windows/Linux     | macOS             | 描述                 |
-| :----------- | :---------------- | :---------------- | :------------------- |
-| 导入 Markdown | `Ctrl` + `O`      | `Cmd` + `O`       | 打开文件选择对话框   |
-| 导出 Markdown | `Ctrl` + `Alt` + `S` | `Cmd` + `Alt` + `S` | 下载为 `.md` 文件     |
-| 导出 HTML     | `Ctrl` + `Shift` + `E` | `Cmd` + `Shift` + `E` | 下载为 `.html` 文件   |
+| Function       | Windows/Linux     | macOS             | Description             |
+| :------------- | :---------------- | :---------------- | :---------------------- |
+| Import Markdown| `Ctrl` + `O`      | `Cmd` + `O`       | Open file select dialog |
+| Export Markdown| `Ctrl` + `Alt` + `S` | `Cmd` + `Alt` + `S` | Download as `.md` file  |
+| Export HTML    | `Ctrl` + `Shift` + `E` | `Cmd` + `Shift` + `E` | Download as `.html` file|
 
-## 界面与设置
+## Interface and Settings
 
-| 功能         | Windows/Linux     | macOS             | 描述                 |
-| :----------- | :---------------- | :---------------- | :------------------- |
-| 切换主题     | `Alt` + `T`       | `Alt` + `T`       | 切换亮色/暗色主题    |
-| 切换行号     | `Alt` + `L`       | `Alt` + `L`       | 显示/隐藏行号        |
-| 切换换行     | `Alt` + `W`       | `Alt` + `W`       | 启用/禁用自动换行    |
-| 增大字号     | `Ctrl` + `=`      | `Cmd` + `=`       | 增大编辑器字体大小   |
-| 减小字号     | `Ctrl` + `-`      | `Cmd` + `-`       | 减小编辑器字体大小   |
-| 关闭对话框   | `Esc`             | `Esc`             | 关闭设置/表格等对话框 | 
+| Function       | Windows/Linux     | macOS             | Description             |
+| :------------- | :---------------- | :---------------- | :---------------------- |
+| Toggle Theme   | `Alt` + `T`       | `Alt` + `T`       | Switch light/dark theme |
+| Toggle Line Numbers | `Alt` + `L`   | `Alt` + `L`       | Show/hide line numbers  |
+| Toggle Word Wrap | `Alt` + `W`     | `Alt` + `W`       | Enable/disable auto word wrap |
+| Increase Font Size | `Ctrl` + `=`  | `Cmd` + `=`       | Increase editor font size |
+| Decrease Font Size | `Ctrl` + `-`  | `Cmd` + `-`       | Decrease editor font size |
+| Close Dialog   | `Esc`             | `Esc`             | Close settings/table dialogs | 

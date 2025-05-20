@@ -663,26 +663,4 @@ export function insertGeneratedTable(rows, cols) {
     } catch (error) {
         console.error("Error in insertGeneratedTable:", error);
     }
-}
-
-/**
- * 触发编辑器的查找和替换功能。
- * 依赖 CodeMirror 的 search 和 dialog 插件。
- */
-export function findAndReplace() {
-    const editor = getEditor();
-    if (!editor) {
-        console.error("Editor not initialized in findAndReplace");
-        return;
-    }
-    try {
-        // 先清除上一次搜索的高亮
-        editor.execCommand('clearSearch');
-        // 使用 findPersistent 命令，它通常会保持对话框打开
-        editor.execCommand('findPersistent');
-        // findPersistent 会自动聚焦，这里不再需要手动 focus
-        // editor.focus(); 
-    } catch (error) {
-        console.error("Error in findAndReplace:", error);
-    }
 } 

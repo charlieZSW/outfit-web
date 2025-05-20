@@ -1,0 +1,429 @@
+/* 搜索面板相关样式 */
+.search-panel {
+    position: absolute;
+    z-index: 10;
+    background-color: var(--secondary-bg, #dbc8c8);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    padding: 12px;
+    padding-top: 40px;
+    width: 300px; /* 调整宽度，避免元素溢出 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    top: -10000px; /* 默认隐藏 */
+    left: -10000px;
+    transition: box-shadow 0.2s ease, opacity 0.15s ease-in-out;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* 增加背景不透明度 */
+    opacity: 0.97;
+}
+
+/* 拖动句柄样式 */
+.search-panel-drag-handle {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 18px;
+    height: 18px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* 确保在面板内容之上，但在关闭按钮之下（如果关闭按钮需要更高层级） */
+    opacity: 0.5; /* 使其不那么突兀 */
+    transition: opacity 0.2s ease;
+}
+
+.search-panel-drag-handle:hover {
+    opacity: 1;
+}
+
+.search-panel-drag-handle svg {
+    display: block; /* 确保SVG正确显示 */
+    width: 9px;
+    height: 14px;
+}
+
+/* 暗色主题下增强面板对比度 */
+.dark-theme .search-panel {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 当面板可见时增加阴影效果 */
+.search-panel:not([style*="top: -10000px"]) {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+    animation: panel-fade-in 0.15s ease-out;
+}
+
+@keyframes panel-fade-in {
+    from { opacity: 0.6; transform: translateY(-5px); }
+    to { opacity: 0.97; transform: translateY(0); }
+}
+
+.search-panel-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%; /* 确保不超出父容器 */
+}
+
+.search-panel-input-container {
+    flex: 1;
+    width: 100%; /* 确保输入框容器不超出父容器 */
+    min-width: 0; /* 允许缩小到父容器宽度 */
+    position: relative; /* 用于图标定位 */
+    display: flex; /* New: Arrange label and input in a row */
+    align-items: center; /* New: Vertically align label and input */
+    padding-left: 30px; /* New: Add padding to make space for the ::before icon. Icon is 14px wide, at left: 8px. 8+14=22. 30px gives 8px space after icon. */
+}
+
+/* 查找输入框的图标 */
+.search-input-container::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 50%; /* Changed from 70% to 50% for consistent vertical centering */
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+}
+
+/* 替换输入框的图标 */
+.replace-input-container::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'%3E%3C/path%3E%3Cpolyline points='15 3 21 3 21 9'%3E%3C/polyline%3E%3Cline x1='10' y1='14' x2='21' y2='3'%3E%3C/line%3E%3C/svg%3E");
+}
+
+.search-panel-label {
+    margin-bottom: 0; /* Explicitly set */
+    font-size: 12px;
+    color: var(--text-color);
+    font-weight: 500;
+    white-space: nowrap; /* New: Prevent label text from wrapping */
+    margin-right: 8px; /* New: Space between label and input */
+    flex-shrink: 0; /* New: Prevent label from shrinking */
+    width: 55px; /* Modified: Reduced width from 60px to 55px */
+    text-align: left; /* Ensure consistent text alignment */
+}
+
+.search-panel-input {
+    flex: 1; /* New: Make input take remaining space */
+    padding: 6px 8px 6px 8px; /* Modified: Reduced left padding from 28px to 8px as icon is now outside */
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--secondary-bg, #ffffff);
+    color: var(--text-color);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* 确保输入框不超出容器 */
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* 暗色主题下增强输入框对比度 */
+.dark-theme .search-panel-input {
+    background-color: rgba(30, 30, 30, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.search-panel-input:focus {
+    outline: none;
+    border-color: #ced4da; /* Darker gray for focus border */
+    box-shadow: 0 0 0 2px rgba(233, 236, 239, 0.4); /* Shadow from new light gray RGB */
+}
+
+.search-panel-button-group {
+    display: flex;
+    flex-wrap: nowrap; /* Make buttons stay on one line */
+    gap: 8px;
+    width: 100%; /* 确保按钮组不超出父容器 */
+}
+
+.search-panel-button {
+    padding: 1px 10px;
+    background-color: var(--button-bg-color, var(--bg-color));
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 13px;
+    min-width: 70px;
+    text-align: center;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+    /* 确保按钮不超出容器 */
+    box-sizing: border-box;
+    flex: 1;
+}
+
+/* 主要操作按钮样式 */
+.search-panel-button#search-panel-next,
+.search-panel-button#search-panel-replace-all {
+    background-color: #E9ECEF; /* New light gray */
+    color: var(--text-color); /* Dark text color */
+    border-color: #E9ECEF;    /* New light gray */
+}
+
+.search-panel-button#search-panel-next:hover,
+.search-panel-button#search-panel-replace-all:hover {
+    background-color: #ced4da; /* Darker gray for hover */
+    border-color: #ced4da;    /* Darker gray for hover */
+    color: var(--text-color); /* Ensure text color remains dark on hover */
+}
+
+.search-panel-button:hover {
+    background-color: var(--button-hover-bg-color, var(--hover-color));
+    border-color: var(--border-hover-color, var(--border-color));
+}
+
+.search-panel-button:focus {
+    outline: none;
+    border-color: #ced4da; /* Darker gray for focus border */
+    box-shadow: 0 0 0 2px rgba(233, 236, 239, 0.4); /* Shadow from new light gray RGB */
+}
+
+.search-panel-button:active {
+    background-color: var(--button-active-bg-color, var(--active-color));
+    transform: translateY(1px);
+}
+
+/* 暗色主题下增强按钮对比度 */
+.dark-theme .search-panel-button {
+    background-color: rgba(40, 40, 40, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.dark-theme .search-panel-button:hover {
+    background-color: rgba(60, 60, 60, 0.8);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.search-panel-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: none;
+    background: transparent;
+    font-size: 18px; /* 增加字体大小 */
+    line-height: 1;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 4px; /* 增加内边距扩大点击区域 */
+    width: 24px; /* 增加宽度 */
+    height: 24px; /* 增加高度 */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    z-index: 11; /* 确保在其他元素之上 */
+}
+
+.search-panel-close:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}
+
+.search-panel-close:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(233, 236, 239, 0.4); /* Shadow from new light gray RGB */
+}
+
+.search-panel-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+    width: 100%; /* 确保选项容器不超出父容器 */
+}
+
+/* 暗色主题下增强分隔线可见性 */
+.dark-theme .search-panel-options {
+    border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+.search-panel-option {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+    /* 改为占33.33%宽度，每行三个选项, 减去gap的影响 */
+    width: calc((100% - 20px) / 3); /* 100% total width, 2 gaps of 10px each, divided by 3 columns */
+}
+
+/* 全新的复选框样式 */
+.search-panel-option input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 3px;
+    margin-right: 6px;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+    background-color: var(--bg-color);
+    transition: all 0.2s ease;
+}
+
+/* 暗色主题下增强复选框对比度 */
+.dark-theme .search-panel-option input[type="checkbox"] {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(30, 30, 30, 0.6);
+}
+
+.search-panel-option input[type="checkbox"]:checked {
+    background-color: #E9ECEF; /* New light gray */
+    border-color: #E9ECEF;    /* New light gray */
+}
+
+.search-panel-option input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px; /* Adjust as needed for vertical centering of the tick */
+    left: 5px; /* Adjust as needed for horizontal centering of the tick */
+    width: 4px;
+    height: 8px;
+    border: solid var(--text-color); /* Dark tick color */
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    display: block;
+}
+
+.search-panel-option input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(233, 236, 239, 0.4); /* Shadow from new light gray RGB */
+}
+
+.search-panel-option:hover input[type="checkbox"]:not(:checked) {
+    border-color: #ced4da; /* Darker gray for hover on unchecked border */
+    background-color: rgba(233, 236, 239, 0.2); /* Lighter background fill on hover */
+}
+
+/* 选项标签增强 */
+.search-panel-option label {
+    color: var(--text-color);
+    font-weight: normal;
+    transition: color 0.2s ease;
+}
+
+.search-panel-option input[type="checkbox"]:checked + label {
+    color: var(--text-color); /* Dark text for label of checked item */
+    font-weight: 500;
+}
+
+.search-panel-status {
+    font-size: 12px;
+    color: var(--secondary-text-color);
+    min-height: 20px;
+    margin-top: 6px;
+    padding: 4px 8px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    border-radius: 3px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 暗色主题下增强状态区域对比度 */
+.dark-theme .search-panel-status {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.search-panel-status.error {
+    color: var(--error-color, #e53935);
+    font-weight: 500;
+    background-color: rgba(229, 57, 53, 0.07);
+}
+
+.dark-theme .search-panel-status.error {
+    background-color: rgba(229, 57, 53, 0.15);
+}
+
+.search-panel-status.success {
+    color: var(--success-color, #43a047);
+    background-color: rgba(67, 160, 71, 0.07);
+}
+
+.dark-theme .search-panel-status.success {
+    background-color: rgba(67, 160, 71, 0.15);
+}
+
+/* 匹配项高亮样式增强 */
+.cm-search-match-highlight {
+    background-color: rgba(255, 213, 79, 0.4);
+    border-radius: 2px;
+}
+
+/* 暗色主题下的匹配项高亮调整 */
+.dark-theme .cm-search-match-highlight {
+    background-color: rgba(255, 213, 79, 0.3);
+}
+
+.cm-search-match-current {
+    background-color: rgba(255, 152, 0, 0.6);
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(255, 152, 0, 0.8);
+    position: relative;
+    animation: pulse-highlight 1.5s infinite;
+}
+
+/* 添加高亮动画效果 */
+@keyframes pulse-highlight {
+    0%, 100% { background-color: rgba(255, 152, 0, 0.6); }
+    50% { background-color: rgba(255, 152, 0, 0.8); }
+}
+
+/* 暗色主题下的当前匹配项高亮调整 */
+.dark-theme .cm-search-match-current {
+    background-color: rgba(255, 152, 0, 0.5);
+    box-shadow: 0 0 0 1px rgba(255, 152, 0, 0.7);
+}
+
+/* 搜索输入框错误样式 */
+.search-input-error {
+    border-color: var(--error-color, #e53935) !important;
+    animation: search-error-flash 0.8s ease;
+}
+
+@keyframes search-error-flash {
+    0%, 100% { background-color: var(--input-bg-color, var(--bg-color)); }
+    50% { background-color: rgba(229, 57, 53, 0.1); }
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+    .search-panel {
+        width: calc(100% - 40px);
+        left: 20px !important;
+        right: 20px !important;
+    }
+    
+    .search-panel-button-group {
+        justify-content: space-between;
+    }
+    
+    .search-panel-button {
+        min-width: calc(50% - 4px);
+    }
+} 

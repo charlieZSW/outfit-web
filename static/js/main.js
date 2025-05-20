@@ -67,8 +67,7 @@ import {
     toggleCodeBlock,
     insertHorizontalRule,
     insertLink,
-    insertGeneratedTable,
-    findAndReplace
+    insertGeneratedTable
 } from './modules/editorUtils.js';
 // Import FileManager functions (v2.1 - Updated fileManager with proper ES6 imports - timestamp: 20240527)
 import {
@@ -101,6 +100,8 @@ import { initScrollSync, cleanupScrollSync } from './modules/scrollSync.js';
 import layoutEnhancer from './modules/layoutEnhancer.js';
 // Import toolbarDrawer module
 import toolbarDrawer from './modules/toolbarDrawer.js';
+// Import searchManager module
+import { initSearchPanel, showSearchPanel, hideSearchPanel } from './modules/searchManager.js';
 
 // Debounce utility (defined here temporarily, move to utils.js later)
 function debounce(func, delay) {
@@ -144,7 +145,7 @@ function setupEventListeners() {
                 const rows = parseInt(tableRowsInput.value, 10);
                 const cols = parseInt(tableColsInput.value, 10);
                 if (isNaN(rows) || isNaN(cols) || rows < 1 || cols < 1) {
-                    tableModalError.textContent = '请输入有效的正整数行数和列数。';
+                    tableModalError.textContent = 'Please enter valid positive integers for rows and columns.';
                     tableModalError.style.display = 'block';
                     tableModalError.setAttribute('aria-hidden', 'false');
                 } else {
@@ -241,11 +242,14 @@ function setupEventListeners() {
     if (toolbarButtons.heading) toolbarButtons.heading.addEventListener('click', () => toggleHeading());
     if (toolbarButtons.code) toolbarButtons.code.addEventListener('click', () => toggleCodeBlock());
     if (toolbarButtons.hr) toolbarButtons.hr.addEventListener('click', () => insertHorizontalRule());
-    if (toolbarButtons.find) toolbarButtons.find.addEventListener('click', () => {
-        findAndReplace();
-    });
     if (toolbarButtons.undo) toolbarButtons.undo.addEventListener('click', () => { const editor = getEditor(); if(editor) { editor.undo(); editor.focus();} });
     if (toolbarButtons.redo) toolbarButtons.redo.addEventListener('click', () => { const editor = getEditor(); if(editor) { editor.redo(); editor.focus();} });
+    if (toolbarButtons.find) {
+        toolbarButtons.find.addEventListener('click', () => {
+            showSearchPanel();
+            toolbarButtons.find.setAttribute('aria-expanded', 'true');
+        });
+    }
     if (toolbarButtons.importMd) toolbarButtons.importMd.addEventListener('click', triggerImport);
     if (toolbarButtons.exportMd) toolbarButtons.exportMd.addEventListener('click', exportMarkdown);
     if (toolbarButtons.exportHtml) toolbarButtons.exportHtml.addEventListener('click', exportHtml);
@@ -278,7 +282,7 @@ function initializeApp() {
     } catch (error) {
         console.error("[main] Initialization failed during initial checks:", error);
         // Optionally display a more prominent error to the user
-        previewArea.innerHTML = `<p style="color: red; font-weight: bold;">应用初始化失败: ${error.message}. 请检查控制台或刷新页面。</p>`;
+        previewArea.innerHTML = `<p style="color: red; font-weight: bold;">Application initialization failed: ${error.message}. Please check the console or refresh the page.</p>`;
         return; // Stop initialization
     }
     // console.log("[main] Initial checks passed."); // Removed log
@@ -318,6 +322,9 @@ function initializeApp() {
             "Ctrl-Alt-S": () => toolbarButtons.exportMd.click(), // Export MD
             "Ctrl-Shift-E": () => toolbarButtons.exportHtml.click(), // Export HTML
             "Alt-?": () => helpButton.click(), // Show help
+            // 添加查找/替换快捷键
+            "Ctrl-F": () => { showSearchPanel(false); if (toolbarButtons.find) toolbarButtons.find.setAttribute('aria-expanded', 'true'); },
+            "Ctrl-H": () => { showSearchPanel(true); if (toolbarButtons.find) toolbarButtons.find.setAttribute('aria-expanded', 'true'); },
             // Adjust font size shortcuts
             "Ctrl-=": () => {
                 const current = settingFontSize.value;
@@ -381,6 +388,9 @@ function initializeApp() {
     // Initialize toolbar drawer if present
     console.log("Initializing toolbar drawer...");
     toolbarDrawer.init();
+
+    // 初始化搜索面板
+    initSearchPanel();
 
     console.log('App initialized successfully.');
 }

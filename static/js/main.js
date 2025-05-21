@@ -105,6 +105,8 @@ import toolbarDrawer from './modules/toolbarDrawer.js';
 import { initSearchPanel, showSearchPanel, hideSearchPanel } from './modules/searchManager.js';
 // Import shareManager module (New)
 import { handleShare } from './modules/shareManager.js';
+// Import feedbackManager module (New)
+import { initFeedbackManager } from './modules/feedbackManager.js';
 
 // Debounce utility (defined here temporarily, move to utils.js later)
 function debounce(func, delay) {
@@ -457,6 +459,9 @@ async function initializeApp() {
 
     // 初始化搜索面板
     initSearchPanel();
+
+    // 初始化反馈功能 (New)
+    initFeedbackManager();
 
     console.log('App initialized successfully.');
 }

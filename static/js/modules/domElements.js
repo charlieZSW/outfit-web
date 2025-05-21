@@ -75,3 +75,10 @@ export const fullscreenToggleButton = document.getElementById('fullscreen-toggle
 
 // Share Button (New)
 export const shareButton = document.getElementById('share-button'); 
+
+// Feedback Modal Elements (New)
+export const feedbackButton = document.getElementById('feedback-button');
+export const feedbackModal = document.getElementById('feedback-modal');
+export const feedbackModalCloseButton = document.getElementById('feedback-modal-close');
+export const feedbackForm = document.getElementById('feedback-form');
+export const feedbackStatusElement = document.getElementById('feedback-status'); 

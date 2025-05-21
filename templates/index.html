@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="/static/css/layout-features.css">
     <!-- Search panel styles -->
     <link rel="stylesheet" href="/static/css/search-panel.css">
+    <!-- Feedback feature styles -->
+    <link rel="stylesheet" href="/static/css/feedback.css">
 </head>
 <body>
     <header>
@@ -137,6 +139,9 @@ fill="currentColor" stroke="none">
         </button>
             <button id="share-button" class="theme-toggle-button" title="Share (Alt+S)" aria-label="Share" aria-pressed="false">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            </button>
+            <button id="feedback-button" class="theme-toggle-button" title="Send Feedback" aria-label="Send Feedback" aria-haspopup="dialog" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </button>
             <!-- Future button slot 1 -->
             <!-- Future button slot 2 -->
@@ -299,6 +304,41 @@ fill="currentColor" stroke="none">
         </div>
     </div>
     <!-- END: Shortcuts Help Modal -->
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal" style="display: none;" role="dialog" aria-labelledby="feedback-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="feedback-modal-title">Send Feedback</h3>
+                <button id="feedback-modal-close" class="modal-close-button" aria-label="Close feedback modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="feedback-form" action="https://formspree.io/f/xldbkrzj" method="POST">
+                    <div class="form-group">
+                        <label for="feedback-type">Feedback Type:</label>
+                        <select id="feedback-type" name="feedback_type">
+                            <option value="bug">Bug Report</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="general">General Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-message">Message:</label>
+                        <textarea id="feedback-message" name="message" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedback-email">Your Email (Optional):</label>
+                        <input type="email" id="feedback-email" name="email">
+                    </div>
+                    <div class="form-group modal-actions">
+                        <button type="submit" class="button">Send Feedback</button>
+                    </div>
+                </form>
+                <div id="feedback-status" role="status" aria-live="polite" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Key libraries (according to dependency-management.mdc) -->
     <!-- Priority on using CDN -->

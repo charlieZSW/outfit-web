@@ -1,0 +1,137 @@
+/* static/css/feedback.css */
+
+/* Inherit modal styles from style.css to maintain consistency */
+/* These are general modal styles and should apply if feedback-modal has class="modal" */
+
+/* Specific styles for feedback modal content if needed */
+#feedback-modal .modal-content {
+    /* You can add specific width or max-width if different from other modals */
+    /* max-width: 500px; */
+}
+
+#feedback-modal .modal-header {
+    /* Styles for the header of the feedback modal */
+    /* display: flex; */
+    /* justify-content: space-between; */
+    /* align-items: center; */
+    /* padding-bottom: 0.5rem; */
+    /* border-bottom: 1px solid var(--border-color); */
+    /* margin-bottom: 1rem; */
+}
+
+#feedback-modal #feedback-modal-title {
+    /* font-size: 1.2rem; */
+    /* margin: 0; */
+}
+
+#feedback-modal .modal-close-button {
+    /* background: none; */
+    /* border: none; */
+    /* font-size: 1.5rem; */
+    /* cursor: pointer; */
+    /* color: var(--text-color); */
+}
+
+#feedback-modal .modal-body {
+    /* padding-top: 0.5rem; */
+}
+
+/* Form group styling from style.css (should be applied if class="form-group" is used) */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    color: var(--secondary-text-color);
+}
+
+.form-group input[type="email"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--textarea-bg);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    box-sizing: border-box; /* Ensure padding and border don't increase width */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input[type="email"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--link-color);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem var(--link-focus-shadow);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Ensure select arrow is visible in dark theme */
+body.dark-theme .form-group select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cccccc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Button styling (should be applied if class="button" is used, or inherit from .modal-footer button) */
+#feedback-modal .modal-actions {
+    text-align: right; /* Align button to the right */
+    margin-top: 1.5rem;
+}
+
+#feedback-modal .button,
+#feedback-form button[type="submit"] {
+    background-color: var(--link-color); /* Use link color for primary action */
+    color: var(--secondary-bg); /* Text color that contrasts with link color */
+    border: 1px solid var(--link-color);
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+#feedback-modal .button:hover,
+#feedback-form button[type="submit"]:hover {
+    opacity: 0.85;
+}
+
+/* Feedback status message styling */
+#feedback-status {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+#feedback-status.success {
+    background-color: #d4edda; /* Light green */
+    color: #155724; /* Dark green */
+    border: 1px solid #c3e6cb;
+}
+
+#feedback-status.error {
+    background-color: #f8d7da; /* Light red */
+    color: #721c24; /* Dark red */
+    border: 1px solid #f5c6cb;
+}
+
+/* Styling for the new feedback button in the header */
+#feedback-button {
+    /* Uses .theme-toggle-button styles by default */
+    /* Add specific overrides if needed */
+} 

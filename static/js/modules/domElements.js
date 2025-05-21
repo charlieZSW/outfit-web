@@ -71,4 +71,7 @@ export const resizeHandle = document.getElementById('resize-handle');
 export const editorPane = document.querySelector('.editor-pane');
 export const previewPane = document.querySelector('.preview-pane');
 export const editorContainer = document.querySelector('.editor-container');
-export const fullscreenToggleButton = document.getElementById('fullscreen-toggle'); 
+export const fullscreenToggleButton = document.getElementById('fullscreen-toggle');
+
+// Share Button (New)
+export const shareButton = document.getElementById('share-button'); 

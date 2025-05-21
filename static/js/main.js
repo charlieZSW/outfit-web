@@ -37,7 +37,8 @@ import {
     shortcutsModal,
     shortcutsModalClose,
     shortcutsModalCloseBtn,
-    shortcutsModalContent
+    shortcutsModalContent,
+    shareButton
 } from './modules/domElements.js';
 
 import {
@@ -102,6 +103,8 @@ import layoutEnhancer from './modules/layoutEnhancer.js';
 import toolbarDrawer from './modules/toolbarDrawer.js';
 // Import searchManager module
 import { initSearchPanel, showSearchPanel, hideSearchPanel } from './modules/searchManager.js';
+// Import shareManager module (New)
+import { handleShare } from './modules/shareManager.js';
 
 // Debounce utility (defined here temporarily, move to utils.js later)
 function debounce(func, delay) {
@@ -114,14 +117,30 @@ function debounce(func, delay) {
     };
 }
 
-// --- Temporary Accessor for Script Objects (Remove after full refactor) ---
-// const EditorUI = window.EditorUI || {}; // REMOVED - Now imported
-// const ThemeManager = window.ThemeManager || { toggle: themeToggle }; // Keep ThemeManager line if script.js still defines it globally (unlikely for theme)
-// const ShortcutsHelp = window.ShortcutsHelp || {}; // REMOVED - Now imported
-// if (Object.keys(EditorUI).length === 0) console.warn("Global EditorUI not found! UI settings might fail."); // REMOVED
-// if (Object.keys(ShortcutsHelp).length === 0) console.warn("Global ShortcutsHelp not found! Help modal might fail."); // REMOVED
+async function loadSnapshotContent(snapshotId) {
+    try {
+        console.log(`尝试加载快照: ${snapshotId}`);
+        const response = await fetch(`/api/get-snapshot/${snapshotId}`); // Relative path
 
-// console.log('main.js loaded as module.'); // Removed log
+        if (!response.ok) {
+            if (response.status === 404) {
+                alert("快照未找到或已过期。将加载本地保存的内容（如有）。");
+                console.warn(`快照 ${snapshotId} 未找到或已过期。`);
+                return null; // Indicate snapshot not loaded
+            }
+            const errorText = await response.text();
+            throw new Error(`获取快照失败: ${response.status} ${errorText}`);
+        }
+
+        const { markdownContent } = await response.json();
+        return markdownContent;
+
+    } catch (error) {
+        console.error(`加载快照 ${snapshotId} 失败:`, error);
+        alert(`无法加载分享的快照内容: ${error.message}`);
+        return null; // Indicate snapshot not loaded
+    }
+}
 
 // =========================================================================
 // Event Listener Setup
@@ -134,6 +153,13 @@ function setupEventListeners() {
         themeToggleButton.addEventListener('click', themeToggle);
     } else {
         console.warn("Theme toggle button not found, cannot attach listener.");
+    }
+
+    // Share Button (New)
+    if (shareButton) {
+        shareButton.addEventListener('click', handleShare);
+    } else {
+        console.warn("Share button not found, cannot attach listener.");
     }
 
     // --- Modal Listeners Setup ---
@@ -271,10 +297,28 @@ function setupEventListeners() {
 // =========================================================================
 // Application Initialization
 // =========================================================================
-function initializeApp() {
+async function initializeApp() {
     // console.log("[main] DOM fully loaded. Initializing application..."); // Removed log
 
-    // 1. Run essential checks (e.g., for required libraries)
+    let loadedFromSnapshot = false; // 标志位
+
+    // 0. 检查 URL hash 中是否有快照 ID
+    if (window.location.hash && window.location.hash.startsWith('#s=')) {
+        const snapshotId = window.location.hash.substring(3); // Remove #s=
+        if (snapshotId) {
+            const snapshotContent = await loadSnapshotContent(snapshotId);
+            if (snapshotContent !== null) { // 确保真的加载到了内容
+                // 我们需要编辑器实例先初始化，然后再设置内容
+                // 所以这里先保存内容，在编辑器初始化后再设置
+                window.initialSnapshotContent = snapshotContent;
+                loadedFromSnapshot = true;
+                // 清除 hash，避免刷新时重复加载或干扰后续操作
+                history.pushState("", document.title, window.location.pathname + window.location.search);
+            }
+        }
+    }
+
+    // 1. Run essential checks
     // console.log("[main] Running initial checks..."); // Removed log
     try {
         runInitialChecks();
@@ -296,6 +340,10 @@ function initializeApp() {
     // 3. Initialize CodeMirror Editor
     // console.log("[main] Initializing CodeMirror editor..."); // Removed log
     const settings = getSettings();
+    // Note: initializeCodeMirror itself should call setEditor(editorInstance) internally
+    // or return the instance which we then pass to setEditor.
+    // For this example, we assume initializeCodeMirror handles setting the editor instance in state.js
+    // or we get it via getEditor() after its initialization.
     const editorInstance = initializeCodeMirror({
         inputElement: markdownInput, // The <textarea>
         initialSettings: settings, // Use loaded settings
@@ -347,26 +395,44 @@ function initializeApp() {
         }
     });
 
-    if (!editorInstance) {
+    if (!editorInstance) { // Check if editorInstance was successfully created
         console.error("[main] Failed to initialize CodeMirror. Application cannot proceed.");
         // Error message is likely already shown by initializeCodeMirror
         return; // Stop initialization
     }
 
+    // Ensure editor state is updated (if initializeCodeMirror doesn't do it)
+    // setEditor(editorInstance); // This might be redundant if initializeCodeMirror already calls setEditor
+
     // 添加光标位置监听器以更新工具栏状态
     editorInstance.on('cursorActivity', updateToolbarButtonStates);
 
-    // 4. Load saved content (must be after editor init)
-    // console.log("[main] Loading saved content..."); // Removed log
-    loadContentFromStorage();
-    // console.log("[main] Attempted to load saved content."); // Removed log
+    // 3.5 如果从快照加载了内容，在这里设置到编辑器
+    if (loadedFromSnapshot && window.initialSnapshotContent) {
+        console.log("正在从快照设置编辑器内容...");
+        editorInstance.setValue(window.initialSnapshotContent);
+        // 可选：清除撤销历史，因为这是新加载的内容
+        editorInstance.clearHistory(); 
+        delete window.initialSnapshotContent; // 清理全局变量
+    }
 
-    // 5. Initial Preview & Status Update (call once after loading content)
-    // console.log("[main] Performing initial preview and status update..."); // Removed log
-    const initialContent = getEditor().getValue();
-    updatePreview(initialContent);
-    updateStatusCounts(initialContent);
-    // console.log("[main] Initial preview and status updated."); // Removed log
+
+    // 4. Load saved content (must be after editor init)
+    //    只在没有从快照加载内容时才从 LocalStorage 加载
+    if (!loadedFromSnapshot) {
+        // console.log("[main] Loading saved content from LocalStorage...");
+        loadContentFromStorage(); // 你现有的函数
+        // console.log("[main] Attempted to load saved content.");
+    } else {
+        console.log("[main] 跳过从 LocalStorage 加载内容，因为已从快照加载。");
+    }
+
+    // 5. Initial Preview & Status Update
+    // 确保这里使用的 initialContent 是编辑器当前的内容
+    const currentEditorContent = editorInstance.getValue(); // Always get fresh content
+    updatePreview(currentEditorContent); // 你现有的函数
+    updateStatusCounts(currentEditorContent); // 你现有的函数
+    // console.log("[main] Initial preview and status updated.");
 
     // 6. Setup remaining listeners (toolbar state, settings controls)
     // console.log("[main] Setting up event listeners via setupEventListeners()..."); // Removed log

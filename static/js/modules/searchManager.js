@@ -26,7 +26,11 @@ function createSearchPanelDOM() {
     panel.className = 'search-panel';
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-label', 'Find and Replace');
-    
+
+    // --- 创建 Header ---
+    const header = document.createElement('div');
+    header.className = 'search-panel-header';
+
     // 创建拖动句柄
     const dragHandle = document.createElement('div');
     dragHandle.className = 'search-panel-drag-handle';
@@ -38,9 +42,9 @@ function createSearchPanelDOM() {
             <circle cx="6" cy="11" r="1.2"/>
             <circle cx="6" cy="15" r="1.2"/>
         </svg>
-    `; // 使用了一个更易于点击的垂直排列的四点SVG
-    panel.appendChild(dragHandle);
-    
+    `;
+    header.appendChild(dragHandle);
+
     // 关闭按钮
     const closeButton = document.createElement('button');
     closeButton.className = 'search-panel-close';
@@ -48,8 +52,14 @@ function createSearchPanelDOM() {
     closeButton.innerHTML = '&times;';
     closeButton.setAttribute('aria-label', 'Close search panel');
     closeButton.setAttribute('title', 'Close (Esc)');
-    panel.appendChild(closeButton);
-    
+    header.appendChild(closeButton);
+
+    panel.appendChild(header); // 添加 Header到主面板
+
+    // --- 创建主要内容区域 (查找、替换、按钮组、状态、选项) ---
+    const mainContent = document.createElement('div');
+    mainContent.className = 'search-panel-main-content';
+
     // 查找输入行
     const findRow = document.createElement('div');
     findRow.className = 'search-panel-input-row';
@@ -72,8 +82,25 @@ function createSearchPanelDOM() {
     findContainer.appendChild(findInput);
     
     findRow.appendChild(findContainer);
-    panel.appendChild(findRow);
+    mainContent.appendChild(findRow);
     
+    // 第一个按钮组 (Previous, Next)
+    const findActionsGroup = document.createElement('div');
+    findActionsGroup.className = 'search-panel-button-group'; // 可以复用样式
+    const prevButton = document.createElement('button');
+    prevButton.id = 'search-panel-prev';
+    prevButton.className = 'search-panel-button';
+    prevButton.textContent = 'Previous';
+    prevButton.setAttribute('title', 'Find previous (Shift+Enter)');
+    findActionsGroup.appendChild(prevButton);
+    const nextButton = document.createElement('button');
+    nextButton.id = 'search-panel-next';
+    nextButton.className = 'search-panel-button search-panel-button-primary'; // 突出 Next
+    nextButton.textContent = 'Next';
+    nextButton.setAttribute('title', 'Find next (Enter)');
+    findActionsGroup.appendChild(nextButton);
+    mainContent.appendChild(findActionsGroup); // 放在查找行下方
+
     // 替换输入行
     const replaceRow = document.createElement('div');
     replaceRow.className = 'search-panel-input-row';
@@ -97,47 +124,37 @@ function createSearchPanelDOM() {
     
     replaceRow.appendChild(replaceContainer);
     replaceRow.id = 'search-panel-replace-row';
-    panel.appendChild(replaceRow);
-    
-    // 按钮组
-    const buttonGroup = document.createElement('div');
-    buttonGroup.className = 'search-panel-button-group';
-    
-    // 查找按钮
-    const prevButton = document.createElement('button');
-    prevButton.id = 'search-panel-prev';
-    prevButton.className = 'search-panel-button';
-    prevButton.textContent = 'Previous';
-    prevButton.setAttribute('title', 'Find previous (Shift+Enter)');
-    buttonGroup.appendChild(prevButton);
-    
-    const nextButton = document.createElement('button');
-    nextButton.id = 'search-panel-next';
-    nextButton.className = 'search-panel-button';
-    nextButton.textContent = 'Next';
-    nextButton.setAttribute('title', 'Find next (Enter)');
-    buttonGroup.appendChild(nextButton);
-    
-    // 替换按钮
+    mainContent.appendChild(replaceRow);
+
+    // 第二个按钮组 (Replace, Replace All)
+    const replaceActionsGroup = document.createElement('div');
+    replaceActionsGroup.className = 'search-panel-button-group'; // 可以复用样式
     const replaceButton = document.createElement('button');
     replaceButton.id = 'search-panel-replace';
     replaceButton.className = 'search-panel-button';
     replaceButton.textContent = 'Replace';
     replaceButton.setAttribute('title', 'Replace current match');
-    buttonGroup.appendChild(replaceButton);
-    
+    replaceActionsGroup.appendChild(replaceButton);
     const replaceAllButton = document.createElement('button');
     replaceAllButton.id = 'search-panel-replace-all';
-    replaceAllButton.className = 'search-panel-button';
+    replaceAllButton.className = 'search-panel-button search-panel-button-primary'; // 突出 Replace All
     replaceAllButton.textContent = 'Replace All';
     replaceAllButton.setAttribute('title', 'Replace all matches (Alt+R)');
-    buttonGroup.appendChild(replaceAllButton);
-    
-    panel.appendChild(buttonGroup);
+    replaceActionsGroup.appendChild(replaceAllButton);
+    mainContent.appendChild(replaceActionsGroup); // 放在替换行下方
+
+    // 状态/结果显示区域
+    const statusArea = document.createElement('div');
+    statusArea.id = 'search-panel-status';
+    statusArea.className = 'search-panel-status';
+    statusArea.setAttribute('aria-live', 'polite');
+    mainContent.appendChild(statusArea);
     
     // 选项容器
     const optionsContainer = document.createElement('div');
-    optionsContainer.className = 'search-panel-options';
+    optionsContainer.className = 'search-panel-options collapsed'; // 添加 collapsed 类，默认收起
+    optionsContainer.id = 'search-panel-options';
+    optionsContainer.setAttribute('aria-hidden', 'true');
     
     // 创建选项复选框
     const options = [
@@ -166,15 +183,37 @@ function createSearchPanelDOM() {
         optionsContainer.appendChild(optionDiv);
     });
     
-    panel.appendChild(optionsContainer);
+    mainContent.appendChild(optionsContainer);
+
+    panel.appendChild(mainContent); // 添加主要内容区域到主面板
+
+    // --- 创建 Footer ---
+    const footer = document.createElement('div');
+    footer.className = 'search-panel-footer';
+
+    // "更多设置"按钮
+    const moreSettingsButton = document.createElement('button');
+    moreSettingsButton.id = 'search-panel-more-settings';
+    moreSettingsButton.className = 'search-panel-more-settings';
+    moreSettingsButton.setAttribute('aria-expanded', 'false');
+    moreSettingsButton.setAttribute('aria-controls', 'search-panel-options');
+    moreSettingsButton.setAttribute('title', 'More settings');
+    // Initial icon: chevron-down (indicates expand)
+    moreSettingsButton.innerHTML = `
+        <span class="search-panel-more-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </span>`; 
+    footer.appendChild(moreSettingsButton);
+
+    panel.appendChild(footer); // 添加 Footer 到主面板
     
-    // 状态/结果显示区域
-    const statusArea = document.createElement('div');
-    statusArea.id = 'search-panel-status';
-    statusArea.className = 'search-panel-status';
-    statusArea.setAttribute('aria-live', 'polite');
-    panel.appendChild(statusArea);
-    
+    // 注意：optionsContainer 的创建和子元素添加已在 mainContent 内部完成
+    // 但我们需要在这里确保它的初始 display 状态
+    const optionsContainerInstance = mainContent.querySelector('#search-panel-options');
+    if (optionsContainerInstance) {
+        optionsContainerInstance.style.display = 'none'; // 初始隐藏
+    }
+
     return panel;
 }
 
@@ -371,7 +410,8 @@ function setupPanelEvents() {
     const replaceButton = document.getElementById('search-panel-replace');
     const replaceAllButton = document.getElementById('search-panel-replace-all');
     const optionsContainer = _searchPanel.querySelector('.search-panel-options');
-    const dragHandle = _searchPanel.querySelector('.search-panel-drag-handle'); // 获取拖动句柄
+    const moreSettingsButton = document.getElementById('search-panel-more-settings');
+    const dragHandle = _searchPanel.querySelector('.search-panel-drag-handle'); // Corrected selector
 
     // 关闭事件
     closeButton?.addEventListener('click', hideSearchPanel);
@@ -431,6 +471,37 @@ function setupPanelEvents() {
         }
     });
     
+    // 更多设置按钮点击事件
+    if (moreSettingsButton && optionsContainer) {
+        moreSettingsButton.addEventListener('click', () => {
+            const isCurrentlyCollapsed = optionsContainer.classList.contains('collapsed');
+            const iconSpan = moreSettingsButton.querySelector('.search-panel-more-icon');
+            
+            if (isCurrentlyCollapsed) {
+                // 要展开
+                optionsContainer.classList.remove('collapsed');
+                optionsContainer.style.display = 'flex'; 
+                moreSettingsButton.setAttribute('aria-expanded', 'true');
+                moreSettingsButton.setAttribute('title', 'Collapse settings');
+                optionsContainer.setAttribute('aria-hidden', 'false');
+                // Update icon to CHEVRON-UP (indicates collapse next)
+                if (iconSpan) iconSpan.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-up"><polyline points="18 15 12 9 6 15"></polyline></svg>`;
+                setTimeout(positionSearchPanelIfRequired, 10); 
+            } else {
+                // 要收起
+                optionsContainer.classList.add('collapsed');
+                optionsContainer.style.display = 'none'; 
+                moreSettingsButton.setAttribute('aria-expanded', 'false');
+                moreSettingsButton.setAttribute('title', 'More settings');
+                optionsContainer.setAttribute('aria-hidden', 'true');
+                // Update icon to CHEVRON-DOWN (indicates expand next)
+                if (iconSpan) iconSpan.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>`;
+            }
+        });
+    }
+    
     // --- 面板拖动逻辑 ---
     let isDragging = false;
     let panelStartX, panelStartY; // 面板初始位置
@@ -487,6 +558,31 @@ function setupPanelEvents() {
         dragHandle.addEventListener('mousedown', onDragMouseDown);
             }
     // --- 结束面板拖动逻辑 ---
+}
+
+// 新增一个辅助函数，用于在需要时（例如面板可能超出屏幕）才重新定位
+// 这个函数暂时只是一个占位符，具体逻辑可以根据需求完善
+// 目前，为了解决"点击设置按钮跳回原位"的问题，我们先不调用它，或让它不做任何事
+function positionSearchPanelIfRequired() {
+    if (!_searchPanel || !isSearchPanelVisible()) return;
+
+    const panelRect = _searchPanel.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // 检查面板底部是否超出视窗
+    if (panelRect.bottom > windowHeight) {
+        // 计算需要向上移动的偏移量，并额外增加一点边距 (例如 10px)
+        const overflowAmount = panelRect.bottom - windowHeight;
+        const newTop = Math.max(0, panelRect.top - overflowAmount - 10);
+        _searchPanel.style.top = `${newTop}px`;
+        // 注意：这里不修改 left，以保留用户拖动后的水平位置
+    }
+    // 如果面板顶部超出（虽然在展开时不太可能，但拖动后可能发生）
+    else if (panelRect.top < 0) {
+        _searchPanel.style.top = '0px';
+    }
+    // 这里还可以添加逻辑检查左右是否超出，但通常拖动逻辑已处理，
+    // 且展开操作主要影响高度。
 }
 
 /**

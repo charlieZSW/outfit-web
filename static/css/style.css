@@ -30,6 +30,10 @@
     --editor-height: 80vh; /* 增加高度从70vh到80vh */
     /* 头部的高度 */
     --header-height: 2.5rem; /* 定义头部高度 (从 3rem 减小) */
+    /* Search Result Highlighting - Light Theme (Reverted) */
+    /* --search-match-highlight-bg: rgba(255, 220, 0, 0.5); */
+    /* --search-match-current-bg: rgba(255, 170, 0, 0.7); */
+    /* --search-match-current-shadow: rgba(255, 170, 0, 0.9); */
 }
 
 body.dark-theme {
@@ -59,6 +63,10 @@ body.dark-theme {
     --scrollbar-thumb-bg: #555555;
     --scrollbar-thumb-hover-bg: #777777;
     --shadow-color: rgba(255, 255, 255, 0.05); /* Light shadow for contrast */
+    /* Search Result Highlighting - Dark Theme (Reverted) */
+    /* --search-match-highlight-bg: rgba(255, 213, 79, 0.3); */
+    /* --search-match-current-bg: rgba(255, 152, 0, 0.5); */
+    /* --search-match-current-shadow: rgba(255, 152, 0, 0.7); */
 }
 
 

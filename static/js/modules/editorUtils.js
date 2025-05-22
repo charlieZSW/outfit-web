@@ -585,7 +585,7 @@ export function insertLink() {
     }
     try {
         const selection = editor.getSelection();
-        const url = prompt("输入链接 URL:", "https://");
+        const url = prompt("Enter link URL:", "https://");
 
         if (url) { // Only proceed if user entered a URL
             editor.operation(() => {
